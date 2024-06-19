@@ -34,7 +34,7 @@ class MainActivity : ComponentActivity() {
 
             val response = client.newCall(request).execute()
 
-            Log.d("MainActivity", "onCreate: " + response.code())
+            Log.d("MainActivity", "onCreate: " + response.code)
         }
 
         setContent {
