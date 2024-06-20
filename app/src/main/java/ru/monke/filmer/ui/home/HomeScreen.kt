@@ -1,32 +1,20 @@
 package ru.monke.filmer.ui.home
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
-import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
-import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Divider
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextField
-import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.material3.carousel.HorizontalMultiBrowseCarousel
 import androidx.compose.material3.carousel.rememberCarouselState
@@ -37,25 +25,18 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.input.TextFieldValue
-import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.compose.rememberAsyncImagePainter
 import ru.monke.filmer.R
-import ru.monke.filmer.domain.Movie
+import ru.monke.filmer.ui.common.SearchField
+import ru.monke.filmer.ui.common.ShowsList
 import ru.monke.filmer.ui.mockImageUrl
 import ru.monke.filmer.ui.mockedList
-import ru.monke.filmer.ui.theme.BlueAccent
 import ru.monke.filmer.ui.theme.DarkGrey
 import ru.monke.filmer.ui.theme.FilmerTheme
-import ru.monke.filmer.ui.theme.Grey
-import ru.monke.filmer.ui.theme.SoftBlue
 import ru.monke.filmer.ui.theme.White
 
 @Composable
@@ -70,40 +51,24 @@ fun HomeScreen() {
                 vertical = 8.dp)
         ) {
             SearchTextField(
-                modifier = Modifier.fillMaxWidth()
+                modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
             )
             ImageCarousel(modifier = Modifier.padding(top = 24.dp))
-            MostPopularMovies(mockedList)
+            ShowsList(mockedList, stringResource(id = R.string.most_popular))
         }
 
     }
 }
 
 @Composable
-fun SearchTextField(
+private fun SearchTextField(
     modifier: Modifier = Modifier
 ) {
-    var text by remember { mutableStateOf(TextFieldValue("")) }
-    TextField(
+    var text by remember { mutableStateOf("") }
+    SearchField(
         modifier = modifier,
-        shape = RoundedCornerShape(24.dp),
-        colors = TextFieldDefaults.colors(
-            focusedContainerColor = SoftBlue,
-            unfocusedContainerColor = SoftBlue,
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-            focusedTextColor = White,
-            focusedPlaceholderColor = Grey,
-            unfocusedPlaceholderColor = Grey,
-        ),
         value = text,
-        leadingIcon = {
-            Icon(
-                painter = painterResource(id = R.drawable.ic_search),
-                contentDescription = null,
-                tint = Grey
-            )
-        },
+        placeholder = { Text(text = stringResource(id = R.string.search_title_hint)) },
         trailingIcon = {
             Row(
                 modifier = Modifier.height(IntrinsicSize.Min)
@@ -118,12 +83,10 @@ fun SearchTextField(
                     tint = White
                 )
             }
-
-        },
-        maxLines = 1,
-        placeholder = { Text(text = stringResource(id = R.string.search_hint)) },
-        onValueChange = { text = it },
-    )
+        }
+    ) {
+        text = it
+    }
 }
 
 
@@ -175,77 +138,6 @@ fun CarouselItem(
     }
 
 }
-
-@Composable
-fun MostPopularMovies(
-    movies: List<Movie>
-) {
-    Row(
-        modifier = Modifier
-            .padding(top = 24.dp)
-            .fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
-    ) {
-        Text(
-            text = stringResource(id = R.string.most_popular),
-            style = MaterialTheme.typography.headlineLarge
-        )
-        Text(
-            text = stringResource(id = R.string.see_all),
-            style = MaterialTheme.typography.headlineMedium,
-            color = BlueAccent
-        )
-    }
-
-    LazyRow(
-        modifier = Modifier.padding(top = 16.dp),
-        horizontalArrangement = Arrangement.spacedBy(12.dp),
-    ) {
-        items(movies) { movie ->
-            MovieItem(movie = movie)
-        }
-    }
-}
-
-@Composable
-fun MovieItem(
-    movie: Movie
-) {
-    Column(
-        Modifier
-            .background(
-                color = MaterialTheme.colorScheme.surface,
-                shape = RoundedCornerShape(12.dp)
-            )
-            .wrapContentHeight(),
-    ) {
-        Image(
-            modifier = Modifier
-                .width(135.dp)
-                .height(178.dp)
-                .clip(RoundedCornerShape(topEnd = 12.dp, topStart = 12.dp)),
-            painter = painterResource(id = R.drawable.ic_launcher_background),
-            contentDescription = "",
-            contentScale = ContentScale.Crop
-        )
-        Text(
-            modifier = Modifier.padding(top = 12.dp, start = 8.dp),
-            text = movie.title,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 1,
-            style = MaterialTheme.typography.headlineMedium
-        )
-        Text(
-            modifier = Modifier.padding(top = 4.dp, bottom = 8.dp, start = 8.dp),
-            text = movie.category,
-            overflow = TextOverflow.Ellipsis,
-            maxLines = 1,
-            style = MaterialTheme.typography.bodyMedium,
-            color = Grey
-        )
-    }
-}
-
 
 @Composable
 @Preview(showBackground = true)
