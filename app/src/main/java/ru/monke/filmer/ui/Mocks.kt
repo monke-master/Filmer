@@ -7,7 +7,7 @@ val mockImageUrl = "https://sun6-22.userapi.com/impg/c853524/v853524338/1979c5/d
 
 
 val mockedList = listOf(
-    Movie("Зеленый Слоник"),
-    Movie("Библиотекарь"),
-    Movie("Красная жара")
+    Movie("Зеленый Слоник", "Экшн"),
+    Movie("Библиотекарь", "Экшн"),
+    Movie("Красная жара", "Экшн")
 )

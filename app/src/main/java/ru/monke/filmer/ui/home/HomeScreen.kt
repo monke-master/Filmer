@@ -14,6 +14,8 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.wrapContentHeight
+import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -35,6 +37,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
@@ -48,6 +51,7 @@ import ru.monke.filmer.R
 import ru.monke.filmer.domain.Movie
 import ru.monke.filmer.ui.mockImageUrl
 import ru.monke.filmer.ui.mockedList
+import ru.monke.filmer.ui.theme.BlueAccent
 import ru.monke.filmer.ui.theme.DarkGrey
 import ru.monke.filmer.ui.theme.FilmerTheme
 import ru.monke.filmer.ui.theme.Grey
@@ -176,7 +180,25 @@ fun CarouselItem(
 fun MostPopularMovies(
     movies: List<Movie>
 ) {
+    Row(
+        modifier = Modifier
+            .padding(top = 24.dp)
+            .fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween
+    ) {
+        Text(
+            text = stringResource(id = R.string.most_popular),
+            style = MaterialTheme.typography.headlineLarge
+        )
+        Text(
+            text = stringResource(id = R.string.see_all),
+            style = MaterialTheme.typography.headlineMedium,
+            color = BlueAccent
+        )
+    }
+
     LazyRow(
+        modifier = Modifier.padding(top = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         items(movies) { movie ->
@@ -191,25 +213,36 @@ fun MovieItem(
 ) {
     Column(
         Modifier
-            .background(MaterialTheme.colorScheme.surface)
-            .width(IntrinsicSize.Min)
+            .background(
+                color = MaterialTheme.colorScheme.surface,
+                shape = RoundedCornerShape(12.dp)
+            )
+            .wrapContentHeight(),
     ) {
         Image(
             modifier = Modifier
                 .width(135.dp)
-                .height(178.dp),
+                .height(178.dp)
+                .clip(RoundedCornerShape(topEnd = 12.dp, topStart = 12.dp)),
             painter = painterResource(id = R.drawable.ic_launcher_background),
             contentDescription = "",
             contentScale = ContentScale.Crop
         )
         Text(
+            modifier = Modifier.padding(top = 12.dp, start = 8.dp),
             text = movie.title,
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
             style = MaterialTheme.typography.headlineMedium
-
         )
-
+        Text(
+            modifier = Modifier.padding(top = 4.dp, bottom = 8.dp, start = 8.dp),
+            text = movie.category,
+            overflow = TextOverflow.Ellipsis,
+            maxLines = 1,
+            style = MaterialTheme.typography.bodyMedium,
+            color = Grey
+        )
     }
 }
 
