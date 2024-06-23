@@ -1,10 +1,10 @@
 package ru.monke.filmer.ui.common
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.IntrinsicSize
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -14,33 +14,26 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
+import coil.compose.AsyncImage
+import coil.request.ImageRequest
 import ru.monke.filmer.R
 import ru.monke.filmer.domain.Show
+import ru.monke.filmer.ui.getMocked
 import ru.monke.filmer.ui.theme.BlueAccent
 import ru.monke.filmer.ui.theme.FilmerTheme
 import ru.monke.filmer.ui.theme.Grey
-import ru.monke.filmer.ui.theme.MontserratFamily
-import ru.monke.filmer.ui.theme.Orange
-import ru.monke.filmer.ui.theme.TransparentGrey
 import ru.monke.filmer.ui.theme.White
 
 
@@ -86,12 +79,10 @@ private fun ShowItem(
                 color = MaterialTheme.colorScheme.surface,
                 shape = RoundedCornerShape(12.dp)
             )
-            .wrapContentHeight(),
+            .wrapContentHeight()
+            .width(IntrinsicSize.Min),
     ) {
-        ShowCover(
-            cover = painterResource(id = R.drawable.ic_launcher_background),
-            rating = (show.rating / 10f).toString()
-        )
+        ShowPoster(show)
         Text(
             modifier = Modifier.padding(top = 12.dp, start = 8.dp),
             text = show.title,
@@ -112,17 +103,20 @@ private fun ShowItem(
 }
 
 @Composable
-private fun ShowCover(
-    cover: Painter,
-    rating: String
+private fun ShowPoster(
+    show: Show
 ) {
     Box() {
-        Image(
+        AsyncImage(
             modifier = Modifier
                 .width(135.dp)
                 .height(178.dp)
                 .clip(RoundedCornerShape(topEnd = 12.dp, topStart = 12.dp)),
-            painter = cover,
+            model = ImageRequest.Builder(LocalContext.current)
+                .data(show.posters?.poster)
+                .crossfade(true)
+                .placeholder(R.drawable.example_show)
+                .build(),
             contentDescription = "",
             contentScale = ContentScale.Crop
         )
@@ -130,7 +124,7 @@ private fun ShowCover(
             modifier = Modifier
                 .align(Alignment.TopEnd)
                 .padding(8.dp),
-            raring = rating
+            rating = show.rating.getRating()
         )
     }
 }
@@ -139,7 +133,7 @@ private fun ShowCover(
 @Composable
 private fun MovieItemPreview() {
     FilmerTheme(darkTheme = false) {
-        ShowItem(show = Show(title = "12 Чаронов", category = "Комедия", 89))
+        ShowItem(show = getMocked(LocalContext.current.resources))
     }
 }
 

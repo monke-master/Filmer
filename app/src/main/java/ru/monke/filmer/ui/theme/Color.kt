@@ -22,7 +22,7 @@ val Grey = Color(0xFF92929D)
 val WhiteGrey = Color(0xFFF1F1F5)
 val White = Color(0xFFFFFFFF)
 val LineDark = Color(0xFFEAEAEA)
-val TransparentGrey = Color(0x52252836)
+val TransparentGrey = Color(0xCC252836)
 
 
 

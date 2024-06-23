@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -12,6 +13,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -19,14 +21,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.painter.Painter
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import ru.monke.filmer.R
 import ru.monke.filmer.domain.Show
+import ru.monke.filmer.ui.getMocked
 import ru.monke.filmer.ui.theme.FilmerTheme
 import ru.monke.filmer.ui.theme.Grey
 import ru.monke.filmer.ui.theme.MontserratFamily
@@ -35,7 +38,7 @@ import ru.monke.filmer.ui.theme.TransparentGrey
 
 @Composable
 fun RatingBadge(
-    raring: String,
+    rating: String,
     modifier: Modifier = Modifier
 ) {
     Row(
@@ -60,7 +63,7 @@ fun RatingBadge(
 
             )
         Text(
-            text = raring,
+            text = rating,
             color = Orange,
             fontFamily = MontserratFamily,
             fontSize = 12.sp,
@@ -84,31 +87,22 @@ fun ShowItem(
     modifier: Modifier = Modifier,
     show: Show
 ) {
-    Column(
-        modifier = modifier
+    Row(
+        modifier = modifier.padding(top = 16.dp)
     ) {
-        Text(
-            text = stringResource(id = R.string.today),
-            style = MaterialTheme.typography.headlineLarge,
+        ShowPoster(
+            cover = painterResource(id = R.drawable.ic_launcher_background),
+            rating = show.rating.getRating()
         )
-        Row(
-            modifier = Modifier.padding(top = 16.dp)
-        ) {
-            ShowCover(
-                cover = painterResource(id = R.drawable.ic_launcher_background),
-                rating = show.rating.getRating()
-            )
-            ShowDescription(
-                modifier = Modifier.padding(start = 16.dp),
-                show = show
-            )
-        }
+        ShowDescription(
+            modifier = Modifier.padding(start = 16.dp),
+            show = show
+        )
     }
-
 }
 
 @Composable
-private fun ShowCover(
+private fun ShowPoster(
     cover: Painter,
     rating: String
 ) {
@@ -126,7 +120,7 @@ private fun ShowCover(
             modifier = Modifier
                 .align(Alignment.TopStart)
                 .padding(8.dp),
-            raring = rating
+            rating = rating
         )
     }
 }
@@ -149,12 +143,12 @@ private fun ShowDescription(
         DescriptionItem(
             modifier = itemsModifier,
             icon = painterResource(id = R.drawable.ic_calendar),
-            title = show.date.toString()
+            title = show.date.getYear().toString()
         )
         DescriptionItem(
             modifier = itemsModifier,
             icon = painterResource(id = R.drawable.ic_time),
-            title = "${show.duration} ${quantityStringResource(R.plurals.minute, show.duration)}"
+            title = quantityStringResource(R.plurals.minute, show.duration, show.duration)
         )
         DescriptionItem(
             modifier = itemsModifier,
@@ -187,5 +181,17 @@ fun DescriptionItem(
             fontWeight = FontWeight.SemiBold,
             color = Grey
         )
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+private fun ShowItemPreview() {
+    FilmerTheme {
+        Surface(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            ShowItem(show = getMocked(LocalContext.current.resources))
+        }
     }
 }

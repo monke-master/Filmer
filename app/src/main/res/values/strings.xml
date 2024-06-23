@@ -6,9 +6,12 @@
     <string name="see_all">See All</string>
     <string name="recommended_for_you">Recommended for you</string>
     <string name="today">Today</string>
+    <string name="not_found">We are sorry, we can not find the movie :(</string>
+    <string name="not_found_hint">Find your movie by Type title, categories, years, etc </string>
+    <string name="story_line">Story line</string>
 
     <plurals name="minute">
-        <item quantity="one">minute</item>
-        <item quantity="other">minutes</item>
+        <item quantity="one">%s minute</item>
+        <item quantity="other">%s minutes</item>
     </plurals>
 </resources>

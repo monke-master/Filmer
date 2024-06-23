@@ -5,5 +5,7 @@ data class Show(
     val category: String,
     val rating: Int,
     val date: Long = 0,
-    val duration: Int = 0
+    val duration: Int = 0,
+    val posters: Posters? = null,
+    val overview: String = ""
 )
