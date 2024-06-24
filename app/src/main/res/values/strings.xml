@@ -9,6 +9,8 @@
     <string name="not_found">We are sorry, we can not find the movie :(</string>
     <string name="not_found_hint">Find your movie by Type title, categories, years, etc </string>
     <string name="story_line">Story line</string>
+    <string name="home">Home</string>
+    <string name="search">Search</string>
 
     <plurals name="minute">
         <item quantity="one">%s minute</item>
