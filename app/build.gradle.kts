@@ -3,6 +3,7 @@ plugins {
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.compose.compiler)
     kotlin("plugin.serialization") version "2.0.0"
+    kotlin("kapt") version "2.0.0"
 }
 
 android {
@@ -78,4 +79,7 @@ dependencies {
     implementation (libs.ktor.client.gson)
     implementation (libs.ktor.client.json.jvm)
     implementation (libs.ktor.client.negotiation)
+
+    implementation (libs.dagger)
+    kapt (libs.dagger.compiler)
 }

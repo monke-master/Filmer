@@ -143,13 +143,15 @@ private fun ShowDescription(
         DescriptionItem(
             modifier = itemsModifier,
             icon = painterResource(id = R.drawable.ic_calendar),
-            title = show.date.getYear().toString()
+            title = show.year.toString()
         )
-        DescriptionItem(
-            modifier = itemsModifier,
-            icon = painterResource(id = R.drawable.ic_time),
-            title = quantityStringResource(R.plurals.minute, show.duration, show.duration)
-        )
+        show.duration?.let {
+            DescriptionItem(
+                modifier = itemsModifier,
+                icon = painterResource(id = R.drawable.ic_time),
+                title = quantityStringResource(R.plurals.minute, show.duration, show.duration)
+            )
+        }
         DescriptionItem(
             modifier = itemsModifier,
             icon = painterResource(id = R.drawable.ic_movie),

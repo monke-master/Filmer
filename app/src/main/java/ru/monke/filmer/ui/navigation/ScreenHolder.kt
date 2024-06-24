@@ -8,12 +8,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import ru.monke.filmer.di.ApplicationComponent
+import ru.monke.filmer.di.DaggerApplicationComponent
+import ru.monke.filmer.di.daggerViewModel
 import ru.monke.filmer.ui.home.HomeScreen
+import ru.monke.filmer.ui.home.HomeViewModel
 import ru.monke.filmer.ui.search.SearchScreen
 import ru.monke.filmer.ui.theme.FilmerTheme
 
 @Composable
-fun ScreenHolder() {
+fun ScreenHolder(
+    applicationComponent: ApplicationComponent
+) {
     val navController = rememberNavController()
     val items = listOf(
         Screen.Home,
@@ -29,7 +35,12 @@ fun ScreenHolder() {
             startDestination = Screen.Home.route,
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable(Screen.Home.route) { HomeScreen() }
+            composable(Screen.Home.route) { entry ->
+                val viewModel = daggerViewModel {
+                    applicationComponent.homeViewModelFactory().create(HomeViewModel::class.java)
+                }
+                HomeScreen(viewModel)
+            }
             composable(Screen.Search.route) { SearchScreen() }
         }
     }
@@ -39,6 +50,6 @@ fun ScreenHolder() {
 @Preview
 fun ScreenHolderPreview() {
     FilmerTheme {
-        ScreenHolder()
+        ScreenHolder(DaggerApplicationComponent.builder().build())
     }
 }

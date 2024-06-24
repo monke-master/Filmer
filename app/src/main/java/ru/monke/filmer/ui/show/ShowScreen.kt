@@ -188,16 +188,20 @@ private fun ShowDescription(
     ) {
         DescriptionItem(
             icon = painterResource(id = R.drawable.ic_calendar),
-            title = show.date.getYear().toString())
+            title = show.year.toString())
         VerticalDivider(
             modifier = Modifier.padding(horizontal = 12.dp)
         )
-        DescriptionItem(
-            icon = painterResource(id = R.drawable.ic_time),
-            title = quantityStringResource(id = R.plurals.minute, quantity = show.duration, show.duration))
-        VerticalDivider(
-            modifier = Modifier.padding(horizontal = 12.dp)
-        )
+        show.duration?.let {
+            DescriptionItem(
+                icon = painterResource(id = R.drawable.ic_time),
+                title = quantityStringResource(
+                    id = R.plurals.minute,
+                    quantity = show.duration, show.duration))
+            VerticalDivider(
+                modifier = Modifier.padding(horizontal = 12.dp)
+            )
+        }
         DescriptionItem(
             icon = painterResource(id = R.drawable.ic_movie),
             title = show.category)

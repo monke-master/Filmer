@@ -1,43 +1,25 @@
 package ru.monke.filmer.data
 
-import android.util.Log
 import io.ktor.client.HttpClient
 import io.ktor.client.call.body
-import io.ktor.client.plugins.DefaultRequest
-import io.ktor.client.plugins.contentnegotiation.ContentNegotiation
 import io.ktor.client.request.get
-import io.ktor.client.request.header
-import io.ktor.client.request.parameter
-import io.ktor.http.takeFrom
-import io.ktor.serialization.kotlinx.json.json
-import kotlinx.serialization.json.Json
+import javax.inject.Inject
+import javax.inject.Provider
 
-class ShowRemoteDataSourceImpl: ShowRemoteDataSource {
+private const val TAG = "ShowRemoteDataSourceImpl"
 
+class ShowRemoteDataSourceImpl @Inject constructor(
+    private val ktorProvider: ClassProvider<HttpClient>
+): ShowRemoteDataSource {
 
-    val TAG = "ShowRemoteDataSourceImpl"
-
-    suspend fun getTopShows() {
-        val data: List<ShowRemote> =
-            getClient().get(TopShowRequestBuilder().build()).body()
-        Log.d(TAG, "getTopShows: ${data}")
-    }
-
-
-    fun getClient(): HttpClient {
-        val client = HttpClient {
-            install(ContentNegotiation) {
-                json(Json {
-                    ignoreUnknownKeys = true
-                })
-            }
-            install(DefaultRequest) {
-                url(BASE_URl)
-                header(RAPID_API_KEY, API_KEY)
-            }
+    override suspend fun getTopShows(): Result<List<ShowRemote>> {
+        return try {
+            val data: List<ShowRemote> =
+                ktorProvider.get().get(TopShowRequestBuilder().build()).body()
+            Result.success(data)
+        } catch (e: Exception) {
+            Result.failure(e)
         }
-        return client
     }
-
 
 }

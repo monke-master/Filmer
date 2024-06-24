@@ -31,16 +31,18 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import ru.monke.filmer.R
+import ru.monke.filmer.di.daggerViewModel
 import ru.monke.filmer.ui.common.SearchField
 import ru.monke.filmer.ui.common.ShowsList
+import ru.monke.filmer.ui.common.homeViewModel
 import ru.monke.filmer.ui.mockImageUrl
-import ru.monke.filmer.ui.mockedList
 import ru.monke.filmer.ui.theme.DarkGrey
 import ru.monke.filmer.ui.theme.FilmerTheme
 import ru.monke.filmer.ui.theme.White
 
 @Composable
-fun HomeScreen() {
+fun HomeScreen(viewModel: HomeViewModel) {
+    val state = viewModel.state
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background,
@@ -51,10 +53,12 @@ fun HomeScreen() {
                 vertical = 8.dp)
         ) {
             SearchTextField(
-                modifier = Modifier.fillMaxWidth().padding(top = 16.dp)
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp)
             )
             ImageCarousel(modifier = Modifier.padding(top = 24.dp))
-            ShowsList(mockedList, stringResource(id = R.string.most_popular))
+            ShowsList(state, stringResource(id = R.string.most_popular))
         }
 
     }
@@ -143,7 +147,7 @@ fun CarouselItem(
 @Preview(showBackground = true)
 private fun HomePreview() {
     FilmerTheme() {
-        HomeScreen()
+        HomeScreen(homeViewModel())
     }
 }
 

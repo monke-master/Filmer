@@ -47,9 +47,9 @@ fun SearchResultPreview() {
     FilmerTheme {
         Surface(modifier = Modifier.fillMaxSize()){
             SearchResultList(results = listOf(
-                Show(title = "Rambo", category = "Action", rating = 69),
-                Show(title = "Red Flame", category = "Action", rating = 56),
-                Show(title = "Terminator 2", category = "Action", rating = 89),
+//                Show(title = "Rambo", category = "Action", rating = 69),
+//                Show(title = "Red Flame", category = "Action", rating = 56),
+//                Show(title = "Terminator 2", category = "Action", rating = 89),
             ))
         }
     }

@@ -1,4 +1,4 @@
-package ru.monke.filmer
+package ru.monke.filmer.app
 
 import android.os.Bundle
 import android.util.Log
@@ -25,13 +25,8 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             FilmerTheme {
-                ScreenHolder()
+                ScreenHolder(application.appComponent())
             }
-        }
-
-        GlobalScope.launch {
-            val source = ShowRemoteDataSourceImpl()
-            source.getTopShows()
         }
     }
 }

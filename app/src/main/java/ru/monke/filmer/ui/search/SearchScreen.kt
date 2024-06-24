@@ -41,7 +41,7 @@ fun SearchScreen(
         title = "Частушки",
         category = "Сектор Газа",
         rating = 99,
-        date = 29484884,
+        year = 29484884,
         duration = 146,
 
     )
