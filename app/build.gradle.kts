@@ -2,6 +2,7 @@ plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
     alias(libs.plugins.compose.compiler)
+    kotlin("plugin.serialization") version "2.0.0"
 }
 
 android {
@@ -71,4 +72,10 @@ dependencies {
 
     implementation(libs.retrofit)
     implementation(libs.coil.compose)
+
+    implementation (libs.ktor.client.core)
+    implementation (libs.ktor.client.android)
+    implementation (libs.ktor.client.gson)
+    implementation (libs.ktor.client.json.jvm)
+    implementation (libs.ktor.client.negotiation)
 }
