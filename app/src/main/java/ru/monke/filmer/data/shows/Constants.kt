@@ -16,3 +16,5 @@ const val FILTERS_ENDPOINT = "search/filters"
 const val MIN_YEAR_PARAM = "year_min"
 
 const val ID_PARAM = "id"
+const val RATING_PARAM = "rating_min"
+const val GOOD_RATING = 70

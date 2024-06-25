@@ -36,7 +36,10 @@ class ShowRemoteDataSourceImpl @Inject constructor(
         return try {
             val request = FilterRequestBuilder().build(
                 countryCode = countryCode,
-                filters = hashMapOf(MIN_YEAR_PARAM to year.toString())
+                filters = hashMapOf(
+                    MIN_YEAR_PARAM to year.toString(),
+                    RATING_PARAM to GOOD_RATING.toString(),
+                ),
             )
             val res = ktorProvider.get().get(request)
             val data: ShowResponse = res.body()
