@@ -73,6 +73,7 @@ dependencies {
 
     implementation(libs.retrofit)
     implementation(libs.coil.compose)
+    implementation(libs.coil.svg)
 
     implementation (libs.ktor.client.core)
     implementation (libs.ktor.client.android)

@@ -34,6 +34,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
+import coil.decode.SvgDecoder
 import coil.request.ImageRequest
 import org.orbitmvi.orbit.compose.collectAsState
 import ru.monke.filmer.R
@@ -150,9 +151,14 @@ fun CarouselItem(
             contentScale = ContentScale.Crop,
             model = ImageRequest.Builder(LocalContext.current)
                 .data(show.posters.horizontalPoster)
+                .decoderFactory(SvgDecoder.Factory())
                 .crossfade(true)
                 .placeholder(R.drawable.example_show)
                 .build(),
+            onError = {
+                it.result.throwable.printStackTrace()
+                Log.d("ERROR", "CarouselItem: " + it.result.toString())
+            }
         )
         Text(
             text = show.title,
