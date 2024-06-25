@@ -1,4 +1,4 @@
-package ru.monke.filmer.data
+package ru.monke.filmer.data.shows
 
 interface ShowRemoteDataSource {
 
@@ -11,4 +11,8 @@ interface ShowRemoteDataSource {
         countryCode: String = DEFAULT_COUNTRY_VALUE,
         year: Int
     ): Result<List<ShowRemote>>
+
+    suspend fun getShowById(
+        id: String
+    ): Result<ShowRemote>
 }

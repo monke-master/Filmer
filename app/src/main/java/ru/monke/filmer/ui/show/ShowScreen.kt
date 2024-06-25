@@ -18,6 +18,8 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -35,57 +37,82 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import coil.compose.AsyncImage
 import coil.request.ImageRequest
+import org.orbitmvi.orbit.compose.collectAsState
 import ru.monke.filmer.R
 import ru.monke.filmer.domain.Show
 import ru.monke.filmer.ui.common.DescriptionItem
+import ru.monke.filmer.ui.common.LoadingIndicator
 import ru.monke.filmer.ui.common.RatingBadge
 import ru.monke.filmer.ui.common.getRating
 import ru.monke.filmer.ui.common.getYear
 import ru.monke.filmer.ui.common.quantityStringResource
+import ru.monke.filmer.ui.common.showViewModel
 import ru.monke.filmer.ui.getMocked
 import ru.monke.filmer.ui.theme.FilmerTheme
 import ru.monke.filmer.ui.theme.SoftBlue
 
 @Composable
 fun ShowScreen(
-    show: Show
+    viewModel: ShowViewModel,
+    showId: String
 ) {
+    LaunchedEffect(key1 = showId) {
+        viewModel.getShow(showId)
+    }
+
+    val state by viewModel.collectAsState()
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background,
     ) {
-        Column {
-            Box {
-                BackgroundPoster(cover = show.posters.verticalPoster)
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    Toolbar(
-                        modifier = Modifier
-                            .padding(top = 8.dp, start = 16.dp, end = 16.dp)
-                            .fillMaxWidth(),
-                        title = show.title
-                    )
-                    Poster(
-                        modifier = Modifier.padding(top = 24.dp),
-                        cover = show.posters.verticalPoster
-                    )
-                    ShowDescription(
-                        modifier = Modifier.padding(top = 16.dp),
-                        show = show)
-                    RatingBadge(
-                        rating = show.rating.getRating(),
-                        modifier = Modifier.padding(top = 16.dp))
+        if (state.isLoading) {
+            LoadingIndicator()
+        } else if (state.error != null) {
 
-                }
-            }
-            ShowOverview(
-                modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp),
-                overview = show.overview
-            )
         }
 
+        state.show?.let {
+            ShowScreenContent(viewModel = viewModel, show = it)
+        }
+    }
+
+}
+
+@Composable
+private fun ShowScreenContent(
+    viewModel: ShowViewModel,
+    show: Show
+) {
+    Column {
+        Box {
+            BackgroundPoster(cover = show.posters.verticalPoster)
+            Column(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Toolbar(
+                    modifier = Modifier
+                        .padding(top = 8.dp, start = 16.dp, end = 16.dp)
+                        .fillMaxWidth(),
+                    title = show.title
+                )
+                Poster(
+                    modifier = Modifier.padding(top = 24.dp),
+                    cover = show.posters.verticalPoster
+                )
+                ShowDescription(
+                    modifier = Modifier.padding(top = 16.dp),
+                    show = show)
+                RatingBadge(
+                    rating = show.rating.getRating(),
+                    modifier = Modifier.padding(top = 16.dp))
+
+            }
+        }
+        ShowOverview(
+            modifier = Modifier.padding(start = 16.dp, end = 16.dp, top = 16.dp),
+            overview = show.overview
+        )
     }
 }
 
@@ -233,6 +260,14 @@ private fun ShowOverview(
 @Composable
 fun ShowScreenPreview() {
     FilmerTheme {
-        ShowScreen(getMocked(LocalContext.current.resources))
+        Surface(
+            modifier = Modifier.fillMaxSize(),
+            color = MaterialTheme.colorScheme.background,
+        ) {
+            ShowScreenContent(
+                viewModel = showViewModel(),
+                show = getMocked(LocalContext.current.resources)
+            )
+        }
     }
 }

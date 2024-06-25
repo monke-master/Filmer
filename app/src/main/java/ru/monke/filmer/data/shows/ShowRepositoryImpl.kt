@@ -1,4 +1,4 @@
-package ru.monke.filmer.data
+package ru.monke.filmer.data.shows
 
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -25,6 +25,16 @@ class ShowRepositoryImpl @Inject constructor(
             val result = showRemoteDataSource.getFreshShows(year = 2024)
             result.onSuccess { value ->
                 return@withContext Result.success(value.map { it.toDomain() })
+            }
+            Result.failure(result.exceptionOrNull()!!)
+        }
+    }
+
+    override suspend fun getShowById(id: String): Result<Show> {
+        return withContext(Dispatchers.IO) {
+            val result = showRemoteDataSource.getShowById(id)
+            result.onSuccess { value ->
+                return@withContext Result.success(value.toDomain())
             }
             Result.failure(result.exceptionOrNull()!!)
         }

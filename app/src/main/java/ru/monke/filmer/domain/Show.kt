@@ -1,6 +1,7 @@
 package ru.monke.filmer.domain
 
 data class Show(
+    val id: String,
     val title: String,
     val category: String,
     val rating: Int,

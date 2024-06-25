@@ -5,15 +5,19 @@ import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
 import ru.monke.filmer.di.ApplicationComponent
 import ru.monke.filmer.di.DaggerApplicationComponent
 import ru.monke.filmer.di.daggerViewModel
 import ru.monke.filmer.ui.home.HomeScreen
 import ru.monke.filmer.ui.home.HomeViewModel
 import ru.monke.filmer.ui.search.SearchScreen
+import ru.monke.filmer.ui.show.ShowScreen
+import ru.monke.filmer.ui.show.ShowViewModel
 import ru.monke.filmer.ui.theme.FilmerTheme
 
 @Composable
@@ -22,8 +26,8 @@ fun ScreenHolder(
 ) {
     val navController = rememberNavController()
     val items = listOf(
-        Screen.Home,
-        Screen.Search
+        NavigationItem.Home,
+        NavigationItem.Search
     )
     Scaffold(
         bottomBar = {
@@ -32,16 +36,34 @@ fun ScreenHolder(
     ) { innerPadding ->
         NavHost(
             navController = navController,
-            startDestination = Screen.Home.route,
+            startDestination = NavigationItem.Home.route,
             modifier = Modifier.padding(innerPadding)
         ) {
-            composable(Screen.Home.route) { entry ->
+            composable(NavigationItem.Home.route) { entry ->
                 val viewModel = daggerViewModel {
                     applicationComponent.homeViewModelFactory().create(HomeViewModel::class.java)
                 }
-                HomeScreen(viewModel)
+                HomeScreen(
+                    viewModel = viewModel,
+                    onShowItemClicked = { show ->
+                        navController.navigate("show/${show.id}")
+                    }
+                )
             }
-            composable(Screen.Search.route) { SearchScreen() }
+            composable(NavigationItem.Search.route) { SearchScreen() }
+            composable(
+                route = "show/{showId}",
+                arguments = listOf(navArgument("showId") { type = NavType.StringType })
+            ) { backStackEntry ->
+                val viewModel = daggerViewModel {
+                    applicationComponent.showViewModelFactory().create(ShowViewModel::class.java)
+                }
+                ShowScreen(
+                    viewModel = viewModel,
+                    showId = backStackEntry.arguments?.getString(Params.SHOW_ID_PARAM)!!
+                )
+            }
+
         }
     }
 }

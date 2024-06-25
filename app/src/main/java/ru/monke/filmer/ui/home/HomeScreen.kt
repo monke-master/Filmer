@@ -2,6 +2,7 @@ package ru.monke.filmer.ui.home
 
 import android.util.Log
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.IntrinsicSize
@@ -49,7 +50,10 @@ import ru.monke.filmer.ui.theme.FilmerTheme
 import ru.monke.filmer.ui.theme.White
 
 @Composable
-fun HomeScreen(viewModel: HomeViewModel) {
+fun HomeScreen(
+    viewModel: HomeViewModel,
+    onShowItemClicked: (Show) -> Unit
+) {
     LaunchedEffect(key1 = null) {
         viewModel.fetchData()
         Log.d("HomeScreen", "HomeScreen: ")
@@ -76,7 +80,10 @@ fun HomeScreen(viewModel: HomeViewModel) {
                         .fillMaxWidth()
                         .padding(top = 16.dp)
                 )
-                FreshShowsCarousel(modifier = Modifier.padding(top = 24.dp), showsList = state.freshShows)
+                FreshShowsCarousel(
+                    modifier = Modifier.padding(top = 24.dp),
+                    showsList = state.freshShows,
+                    onShowItemClicked = onShowItemClicked)
                 ShowsList(state.topShows, stringResource(id = R.string.most_popular))
             }
         }
@@ -117,7 +124,8 @@ private fun SearchTextField(
 @Composable
 fun FreshShowsCarousel(
     modifier: Modifier = Modifier,
-    showsList: List<Show>
+    showsList: List<Show>,
+    onShowItemClicked: (Show) -> Unit
 ) {
     HorizontalMultiBrowseCarousel(
         state = rememberCarouselState(initialItem = 1) { showsList.count() },
@@ -132,7 +140,8 @@ fun FreshShowsCarousel(
                 .height(205.dp)
                 .width(240.dp)
                 .maskClip(shape = MaterialTheme.shapes.extraLarge),
-            show = showsList[i]
+            show = showsList[i],
+            onShowItemClicked = onShowItemClicked
         )
     }
 }
@@ -140,10 +149,11 @@ fun FreshShowsCarousel(
 @Composable
 fun CarouselItem(
     modifier: Modifier,
-    show: Show
+    show: Show,
+    onShowItemClicked: (Show) -> Unit
 ) {
     Box(
-        modifier = modifier
+        modifier = modifier.clickable { onShowItemClicked(show) }
     ) {
         AsyncImage(
             modifier = modifier,
@@ -174,7 +184,7 @@ fun CarouselItem(
 @Preview(showBackground = true)
 private fun HomePreview() {
     FilmerTheme() {
-        HomeScreen(homeViewModel())
+        HomeScreen(homeViewModel(), {})
     }
 }
 

@@ -1,10 +1,11 @@
-package ru.monke.filmer.data
+package ru.monke.filmer.data.shows
 
 import ru.monke.filmer.domain.Posters
 import ru.monke.filmer.domain.Show
 
 fun ShowRemote.toDomain(): Show {
     return Show(
+        id = id,
         title = title,
         category = "Action",
         duration = runtime,

@@ -19,7 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -34,7 +33,7 @@ import ru.monke.filmer.ui.theme.Grey
 @Composable
 fun BottomNavigationBar(
     navController: NavController = rememberNavController(),
-    items: List<Screen>
+    items: List<NavigationItem>
 ) {
     NavigationBar(
         containerColor = MaterialTheme.colorScheme.background
@@ -77,7 +76,7 @@ fun BottomNavigationBar(
 
 @Composable
 private fun SelectedItem(
-    screen: Screen
+    navigationItem: NavigationItem
 ) {
     Row(
         modifier = Modifier
@@ -92,10 +91,10 @@ private fun SelectedItem(
             modifier = Modifier
                 .padding(end = 4.dp)
                 .size(24.dp),
-            painter = painterResource(id = screen.iconId),
+            painter = painterResource(id = navigationItem.iconId),
             contentDescription = null)
         Text(
-            text = stringResource(id = screen.nameId),
+            text = stringResource(id = navigationItem.nameId),
             style = MaterialTheme.typography.headlineSmall,
             fontWeight = FontWeight.SemiBold
         )
@@ -104,9 +103,9 @@ private fun SelectedItem(
 
 @Composable
 private fun Item(
-    screen: Screen
+    navigationItem: NavigationItem
 ) {
-    Icon(painter = painterResource(id = screen.iconId), contentDescription = null)
+    Icon(painter = painterResource(id = navigationItem.iconId), contentDescription = null)
 }
 
 @Preview
@@ -114,7 +113,7 @@ private fun Item(
 private fun SelectedItemPreview() {
     FilmerTheme {
         Surface {
-            SelectedItem(screen = Screen.Home)
+            SelectedItem(navigationItem = NavigationItem.Home)
         }
 
     }

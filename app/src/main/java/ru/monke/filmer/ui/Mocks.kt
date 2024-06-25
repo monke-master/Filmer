@@ -20,6 +20,7 @@ val mockImageUrl = "https://sun6-22.userapi.com/impg/c853524/v853524338/1979c5/d
 
 fun getMocked(resources: Resources): Show {
     return Show(
+        id = "123",
         title = "Spider Man: Bomb Ukraine",
         category = "Action | SVO",
         rating = 98,

@@ -1,4 +1,4 @@
-package ru.monke.filmer.data
+package ru.monke.filmer.data.shows
 
 const val BASE_URl = "https://streaming-availability.p.rapidapi.com/shows/"
 const val RAPID_API_KEY = "x-rapidapi-key"
@@ -14,3 +14,5 @@ const val TOP_SHOWS_ENDPOINT = "top"
 const val FILTERS_ENDPOINT = "search/filters"
 
 const val MIN_YEAR_PARAM = "year_min"
+
+const val ID_PARAM = "id"
