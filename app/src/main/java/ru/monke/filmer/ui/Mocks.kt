@@ -25,8 +25,7 @@ fun getMocked(resources: Resources): Show {
         rating = 98,
         duration = 123,
         year = Calendar.getInstance().timeInMillis.toInt(),
-        posters = Posters(Uri.parse(ContentResolver.SCHEME_ANDROID_RESOURCE + "://" + resources.getResourcePackageName(
-            R.drawable.example_show) + '/' + resources.getResourceTypeName(R.drawable.example_show) + '/' + resources.getResourceEntryName(R.drawable.example_show) ).toString()),
+        posters = Posters(),
         overview = "For the first time in the cinematic history of Spider-Man, our friendly neighborhood hero's identity is revealed, bringing his Super Hero responsibilities into conflict with his normal life and putting those he cares about most at risk. "
     )
 }

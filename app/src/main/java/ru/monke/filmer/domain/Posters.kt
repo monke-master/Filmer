@@ -1,5 +1,6 @@
 package ru.monke.filmer.domain
 
 data class Posters(
-    val poster: String
+    val horizontalPoster: String? = null,
+    val verticalPoster: String? = null
 )

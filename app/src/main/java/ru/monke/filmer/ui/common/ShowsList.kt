@@ -113,7 +113,7 @@ private fun ShowPoster(
                 .height(178.dp)
                 .clip(RoundedCornerShape(topEnd = 12.dp, topStart = 12.dp)),
             model = ImageRequest.Builder(LocalContext.current)
-                .data(show.posters?.poster)
+                .data(show.posters.verticalPoster)
                 .crossfade(true)
                 .placeholder(R.drawable.example_show)
                 .build(),

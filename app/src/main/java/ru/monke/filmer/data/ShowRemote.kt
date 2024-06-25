@@ -11,5 +11,6 @@ data class ShowRemote(
     val lastAirYear: Int? = null,
     val releaseYear: Int? = null,
     val overview: String,
-    val runtime: Int? = null
+    val runtime: Int? = null,
+    val imageSet: ImageSet
 )

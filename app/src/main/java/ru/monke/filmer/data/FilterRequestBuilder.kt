@@ -5,16 +5,19 @@ import io.ktor.client.request.parameter
 import io.ktor.client.request.request
 import io.ktor.http.takeFrom
 
-class TopShowRequestBuilder {
+class FilterRequestBuilder {
 
     fun build(
         countryCode: String,
-        service: String
+        filters: HashMap<String, String>
     ): HttpRequestBuilder {
         return request {
-            url.takeFrom(TOP_SHOWS_ENDPOINT)
+            url.takeFrom(FILTERS_ENDPOINT)
             parameter(COUNTRY_PARAM, countryCode)
-            parameter(SERVICE_PARAM, service)
+
+            filters.forEach { (param, value) ->
+                parameter(param, value)
+            }
         }
     }
 }

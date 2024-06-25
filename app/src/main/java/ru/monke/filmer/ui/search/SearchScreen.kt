@@ -37,14 +37,7 @@ const val ALL_CATEGORIES = "All"
 @Composable
 fun SearchScreen(
 ) {
-    val todayShow = Show(
-        title = "Частушки",
-        category = "Сектор Газа",
-        rating = 99,
-        year = 29484884,
-        duration = 146,
-
-    )
+    val todayShow = getMocked(LocalContext.current.resources)
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background,

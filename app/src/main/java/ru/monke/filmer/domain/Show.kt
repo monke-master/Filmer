@@ -6,6 +6,6 @@ data class Show(
     val rating: Int,
     val year: Int,
     val duration: Int?,
-    val posters: Posters? = null,
+    val posters: Posters,
     val overview: String = ""
 )

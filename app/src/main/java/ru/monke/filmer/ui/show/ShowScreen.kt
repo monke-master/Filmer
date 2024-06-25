@@ -56,7 +56,7 @@ fun ShowScreen(
     ) {
         Column {
             Box {
-                BackgroundPoster(cover = show.posters?.poster)
+                BackgroundPoster(cover = show.posters.verticalPoster)
                 Column(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalAlignment = Alignment.CenterHorizontally
@@ -69,7 +69,7 @@ fun ShowScreen(
                     )
                     Poster(
                         modifier = Modifier.padding(top = 24.dp),
-                        cover = show.posters?.poster
+                        cover = show.posters.verticalPoster
                     )
                     ShowDescription(
                         modifier = Modifier.padding(top = 16.dp),

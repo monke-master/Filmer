@@ -20,4 +20,13 @@ class ShowRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun getFreshShows(year: Int): Result<List<Show>> {
+        return withContext(Dispatchers.IO) {
+            val result = showRemoteDataSource.getFreshShows(year = 2024)
+            result.onSuccess { value ->
+                return@withContext Result.success(value.map { it.toDomain() })
+            }
+            Result.failure(result.exceptionOrNull()!!)
+        }
+    }
 }
