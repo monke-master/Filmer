@@ -13,6 +13,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -23,8 +24,10 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import org.orbitmvi.orbit.compose.collectAsState
 import ru.monke.filmer.R
 import ru.monke.filmer.domain.Show
+import ru.monke.filmer.ui.common.LoadingPlaceholder
 import ru.monke.filmer.ui.common.SearchField
 import ru.monke.filmer.ui.common.ShowItem
 import ru.monke.filmer.ui.common.ShowsList
@@ -36,39 +39,59 @@ const val ALL_CATEGORIES = "All"
 
 @Composable
 fun SearchScreen(
+    searchViewModel: SearchViewModel,
+    onShowItemClicked: (Show) -> Unit = {}
 ) {
-    val todayShow = getMocked(LocalContext.current.resources)
+    LaunchedEffect(key1 = null) {
+        searchViewModel.fetchData()
+    }
+    
+    val state by searchViewModel.collectAsState()
+    
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background,
     ) {
-        Column(
-            modifier = Modifier.padding(
-                horizontal = 16.dp,
-                vertical = 8.dp)
-        ) {
-            SearchTextField(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 16.dp)
-            )
-            CategoryChipGroup(
-                categoriesList = listOf(ALL_CATEGORIES, "Action", "Slasher", "Smash someone balls"),
-                modifier = Modifier.padding(top = 16.dp)
-            )
-            Text(
-                modifier = Modifier.padding(top = 24.dp),
-                text = stringResource(id = R.string.today),
-                style = MaterialTheme.typography.headlineLarge,
-            )
-            ShowItem(
-                modifier = Modifier.padding(top = 8.dp),
-                show = todayShow)
-            ShowsList(
-                shows = listOf(getMocked(LocalContext.current.resources)).repeat(4),
-                title = stringResource(id = R.string.recommended_for_you))
+        state.todayShow?.let {
+            SearchScreenContent(todayShow = it)
         }
+        if (state.isLoading) {
+            LoadingPlaceholder()
+        } else if (state.error != null) {
+            Text(text = "Лошара")
+        }
+    }
+}
 
+@Composable
+private fun SearchScreenContent(
+    todayShow: Show
+) {
+    Column(
+        modifier = Modifier.padding(
+            horizontal = 16.dp,
+            vertical = 8.dp)
+    ) {
+        SearchTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(top = 16.dp)
+        )
+        CategoryChipGroup(
+            categoriesList = listOf(ALL_CATEGORIES, "Action", "Slasher", "Smash someone balls"),
+            modifier = Modifier.padding(top = 16.dp)
+        )
+        Text(
+            modifier = Modifier.padding(top = 24.dp),
+            text = stringResource(id = R.string.today),
+            style = MaterialTheme.typography.headlineLarge,
+        )
+        ShowItem(
+            modifier = Modifier.padding(top = 8.dp),
+            show = todayShow)
+        ShowsList(
+            shows = listOf(getMocked(LocalContext.current.resources)).repeat(4),
+            title = stringResource(id = R.string.recommended_for_you))
     }
 }
 
@@ -147,6 +170,6 @@ fun SearchTextField(
 @Composable
 private fun SearchScreenPreview() {
     FilmerTheme {
-        SearchScreen()
+        SearchScreenContent(getMocked(LocalContext.current.resources))
     }
 }

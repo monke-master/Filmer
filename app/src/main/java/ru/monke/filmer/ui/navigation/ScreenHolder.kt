@@ -16,6 +16,7 @@ import ru.monke.filmer.di.daggerViewModel
 import ru.monke.filmer.ui.home.HomeScreen
 import ru.monke.filmer.ui.home.HomeViewModel
 import ru.monke.filmer.ui.search.SearchScreen
+import ru.monke.filmer.ui.search.SearchViewModel
 import ru.monke.filmer.ui.show.ShowScreen
 import ru.monke.filmer.ui.show.ShowViewModel
 import ru.monke.filmer.ui.theme.FilmerTheme
@@ -50,7 +51,17 @@ fun ScreenHolder(
                     }
                 )
             }
-            composable(NavigationItem.Search.route) { SearchScreen() }
+            composable(NavigationItem.Search.route) {
+                val viewModel = daggerViewModel {
+                    applicationComponent.searchViewModelFactory().create(SearchViewModel::class.java)
+                }
+                SearchScreen(
+                    searchViewModel = viewModel,
+                    onShowItemClicked =  { show ->
+                        navController.navigate("show/${show.id}")
+                    }
+                )
+            }
             composable(
                 route = "show/{showId}",
                 arguments = listOf(navArgument("showId") { type = NavType.StringType })

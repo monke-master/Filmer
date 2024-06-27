@@ -40,6 +40,7 @@ import org.orbitmvi.orbit.compose.collectAsState
 import ru.monke.filmer.R
 import ru.monke.filmer.domain.Show
 import ru.monke.filmer.ui.common.LoadingIndicator
+import ru.monke.filmer.ui.common.LoadingPlaceholder
 import ru.monke.filmer.ui.common.SearchField
 import ru.monke.filmer.ui.common.ShimmerPoster
 import ru.monke.filmer.ui.common.ShowsList
@@ -183,18 +184,7 @@ fun CarouselItem(
 
 }
 
-@Composable
-private fun LoadingPlaceholder() {
-    Column(
-        horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.Center
-    ) {
-        LoadingIndicator(
-            modifier = Modifier.size(48.dp)
-        )
-        Text(text = stringResource(id = R.string.loading_shows))
-    }
-}
+
 
 @Composable
 @Preview(showBackground = true)

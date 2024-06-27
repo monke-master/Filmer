@@ -7,4 +7,11 @@ interface ShowRepository {
     suspend fun getFreshShows(year: Int): Result<List<Show>>
 
     suspend fun getShowById(id: String): Result<Show>
+
+    suspend fun getShowsByFilters(
+        countryCode: String? = null,
+        filters: HashMap<String, Any>
+    ): Result<List<Show>>
+
+    suspend fun getTodayShow(): Result<Show>
 }

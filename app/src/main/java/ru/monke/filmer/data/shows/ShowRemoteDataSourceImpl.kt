@@ -4,6 +4,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import ru.monke.filmer.di.ClassProvider
+import ru.monke.filmer.domain.Show
 import javax.inject.Inject
 
 private const val TAG = "ShowRemoteDataSourceImpl"
@@ -55,6 +56,24 @@ class ShowRemoteDataSourceImpl @Inject constructor(
             val request = GetShowRequestBuilder().build(id)
             val data: ShowRemote = ktorProvider.get().get(request).body()
             Result.success(data)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun getShowsByFilter(
+        countryCode: String,
+        filters: HashMap<String, Any>
+    ): Result<List<ShowRemote>> {
+        return try {
+            val request = FilterRequestBuilder().build(
+                countryCode = countryCode,
+                filters = filters
+            )
+            val res = ktorProvider.get().get(request)
+            val data: ShowResponse = res.body()
+            Result.success(data.shows)
         } catch (e: Exception) {
             e.printStackTrace()
             Result.failure(e)

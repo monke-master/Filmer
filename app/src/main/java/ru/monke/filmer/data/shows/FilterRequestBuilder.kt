@@ -9,7 +9,7 @@ class FilterRequestBuilder {
 
     fun build(
         countryCode: String,
-        filters: HashMap<String, String>
+        filters: HashMap<String, Any>
     ): HttpRequestBuilder {
         return request {
             url.takeFrom(FILTERS_ENDPOINT)
