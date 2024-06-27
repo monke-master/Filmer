@@ -123,7 +123,11 @@ private fun HomeScreenContent(
             modifier = Modifier.padding(top = 24.dp),
             showsList = freshShows,
             onShowItemClicked = onShowItemClicked)
-        ShowsList(topShows, stringResource(id = R.string.most_popular))
+        ShowsList(
+            shows = topShows,
+            title = stringResource(id = R.string.most_popular),
+            onItemClicked = onShowItemClicked
+        )
     }
 }
 

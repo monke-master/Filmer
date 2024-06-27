@@ -1,6 +1,7 @@
 package ru.monke.filmer.ui.common
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -41,6 +42,7 @@ import ru.monke.filmer.ui.theme.White
 fun ShowsList(
     shows: List<Show>,
     title: String,
+    onItemClicked: (Show) -> Unit = {}
 ) {
     Row(
         modifier = Modifier
@@ -63,18 +65,22 @@ fun ShowsList(
         modifier = Modifier.padding(top = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        items(shows) { movie ->
-            ShowItem(show = movie)
+        items(shows) { show ->
+            SmallShowItem(
+                show = show,
+                modifier = Modifier.clickable { onItemClicked(show) }
+            )
         }
     }
 }
 
 @Composable
-private fun ShowItem(
+private fun SmallShowItem(
+    modifier: Modifier,
     show: Show
 ) {
     Column(
-        Modifier
+        modifier
             .background(
                 color = MaterialTheme.colorScheme.surface,
                 shape = RoundedCornerShape(12.dp)
