@@ -12,5 +12,6 @@ data class ShowRemote(
     val releaseYear: Int? = null,
     val overview: String,
     val runtime: Int? = null,
-    val imageSet: ImageSet
+    val imageSet: ImageSet,
+    val genres: List<GenreRemote>
 )

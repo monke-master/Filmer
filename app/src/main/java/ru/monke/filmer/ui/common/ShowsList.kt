@@ -40,12 +40,13 @@ import ru.monke.filmer.ui.theme.White
 
 @Composable
 fun ShowsList(
+    modifier: Modifier = Modifier,
     shows: List<Show>,
     title: String,
     onItemClicked: (Show) -> Unit = {}
 ) {
     Row(
-        modifier = Modifier
+        modifier = modifier
             .padding(top = 24.dp)
             .fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween
@@ -62,7 +63,7 @@ fun ShowsList(
     }
 
     LazyRow(
-        modifier = Modifier.padding(top = 16.dp),
+        modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
         items(shows) { show ->
@@ -76,7 +77,7 @@ fun ShowsList(
 
 @Composable
 private fun SmallShowItem(
-    modifier: Modifier,
+    modifier: Modifier = Modifier,
     show: Show
 ) {
     Column(
@@ -99,7 +100,7 @@ private fun SmallShowItem(
         )
         Text(
             modifier = Modifier.padding(top = 4.dp, bottom = 8.dp, start = 8.dp),
-            text = show.category,
+            text = show.genres[0].name,
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
             style = MaterialTheme.typography.bodyMedium,
@@ -132,7 +133,7 @@ private fun ShowPoster(
 @Composable
 private fun MovieItemPreview() {
     FilmerTheme(darkTheme = false) {
-        ShowItem(show = getMocked(LocalContext.current.resources))
+        SmallShowItem(show = getMocked(LocalContext.current.resources))
     }
 }
 

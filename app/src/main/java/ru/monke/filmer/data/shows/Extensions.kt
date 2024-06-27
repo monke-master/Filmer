@@ -1,5 +1,6 @@
 package ru.monke.filmer.data.shows
 
+import ru.monke.filmer.domain.Genre
 import ru.monke.filmer.domain.Posters
 import ru.monke.filmer.domain.Show
 
@@ -7,12 +8,12 @@ fun ShowRemote.toDomain(): Show {
     return Show(
         id = id,
         title = title,
-        category = "Action",
         duration = runtime,
         overview = overview,
         rating = rating,
         year = getYear(),
-        posters = imageSet.toPosters()
+        posters = imageSet.toPosters(),
+        genres = genres.map { it.toDomain() }
     )
 }
 
@@ -46,4 +47,11 @@ fun Image.getAvailableHorizontalPoster(): String? {
     w480?.let { return it }
     w360?.let { return it }
     return w240
+}
+
+fun GenreRemote.toDomain(): Genre {
+    return Genre(
+        id = id,
+        name = name
+    )
 }

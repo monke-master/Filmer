@@ -234,7 +234,7 @@ private fun ShowDescription(
         }
         DescriptionItem(
             icon = painterResource(id = R.drawable.ic_movie),
-            title = show.category)
+            title = show.genres[0].name)
     }
 }
 
