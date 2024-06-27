@@ -90,10 +90,7 @@ fun ShowItem(
     Row(
         modifier = modifier.padding(top = 16.dp)
     ) {
-        ShowPoster(
-            cover = painterResource(id = R.drawable.ic_launcher_background),
-            rating = show.rating.getRating()
-        )
+        ShowPoster(show)
         ShowDescription(
             modifier = Modifier.padding(start = 16.dp),
             show = show
@@ -103,24 +100,21 @@ fun ShowItem(
 
 @Composable
 private fun ShowPoster(
-    cover: Painter,
-    rating: String
+    show: Show,
 ) {
     Box() {
-        Image(
+        ShimmerPoster(
+            show = show,
             modifier = Modifier
                 .width(112.dp)
                 .height(147.dp)
                 .clip(RoundedCornerShape(8.dp)),
-            painter = cover,
-            contentDescription = "",
-            contentScale = ContentScale.Crop
         )
         RatingBadge(
             modifier = Modifier
                 .align(Alignment.TopStart)
                 .padding(8.dp),
-            rating = rating
+            rating = show.rating.toString()
         )
     }
 }
