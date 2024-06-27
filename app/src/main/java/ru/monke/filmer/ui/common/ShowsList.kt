@@ -107,19 +107,12 @@ private fun ShowPoster(
     show: Show
 ) {
     Box() {
-        AsyncImage(
+        ShimmerPoster(
+            show = show,
             modifier = Modifier
                 .width(135.dp)
                 .height(178.dp)
-                .clip(RoundedCornerShape(topEnd = 12.dp, topStart = 12.dp)),
-            model = ImageRequest.Builder(LocalContext.current)
-                .data(show.posters.verticalPoster)
-                .crossfade(true)
-                .placeholder(R.drawable.example_show)
-                .build(),
-            contentDescription = "",
-            contentScale = ContentScale.Crop
-        )
+                .clip(RoundedCornerShape(topEnd = 12.dp, topStart = 12.dp)))
         RatingBadge(
             modifier = Modifier
                 .align(Alignment.TopEnd)
