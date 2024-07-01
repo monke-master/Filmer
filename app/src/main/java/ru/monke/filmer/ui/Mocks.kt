@@ -21,6 +21,11 @@ val mockImageUrl = "https://sun6-22.userapi.com/impg/c853524/v853524338/1979c5/d
 
 val action = Genre(
     id = "1",
+    name = "Action"
+)
+
+val comedy = Genre(
+    id = "2",
     name = "Comedy"
 )
 

@@ -6,7 +6,5 @@ class GetTopShowsUseCase @Inject constructor(
     private val showRepository: ShowRepository
 ) {
 
-    suspend fun execute(): Result<List<Show>> {
-        return showRepository.getTopShows()
-    }
+    suspend fun execute(): Result<List<Show>> = showRepository.getTopShows()
 }

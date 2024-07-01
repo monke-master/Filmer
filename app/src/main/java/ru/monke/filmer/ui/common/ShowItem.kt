@@ -81,7 +81,24 @@ private fun RatingBadgePreview() {
     }
 }
 
-
+@Composable
+fun UpdatableShowItem(
+    modifier: Modifier = Modifier,
+    show: Show,
+    onItemClicked: (Show) -> Unit,
+    isUpdating: Boolean
+) {
+    if (isUpdating) {
+        ShimmerShowItem(modifier = modifier)
+    }
+    else {
+        ShowItem(
+            show = show,
+            modifier = modifier,
+            onItemClicked = onItemClicked
+        )
+    }
+}
 
 @Composable
 fun ShowItem(
@@ -91,8 +108,8 @@ fun ShowItem(
 ) {
     Row(
         modifier = modifier
-                    .padding(top = 16.dp)
-                    .clickable { onItemClicked(show) }
+            .padding(top = 16.dp)
+            .clickable { onItemClicked(show) }
     ) {
         ShowPoster(show)
         ShowDescription(
@@ -192,6 +209,35 @@ private fun ShowItemPreview() {
             modifier = Modifier.fillMaxWidth()
         ) {
             ShowItem(show = getMocked(LocalContext.current.resources), onItemClicked = {})
+        }
+    }
+}
+
+@Composable
+fun ShimmerShowItem(
+    modifier: Modifier = Modifier,
+) {
+    Row(
+        modifier = modifier
+            .padding(top = 16.dp)
+    ) {
+        ShimmerPlaceholder(
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(147.dp)
+                .clip(RoundedCornerShape(8.dp))
+        )
+    }
+}
+
+@Composable
+@Preview
+private fun SimmerShowItemPreview() {
+    FilmerTheme {
+        Surface(
+            modifier = Modifier.fillMaxWidth()
+        ) {
+            ShimmerShowItem()
         }
     }
 }

@@ -13,7 +13,7 @@ interface ShowRepository {
         filters: HashMap<String, Any>
     ): Result<List<Show>>
 
-    suspend fun getTodayShow(): Result<Show>
+    suspend fun getTodayShow(genre: Genre): Result<Show>
 
     suspend fun getGenres(): Result<List<Genre>>
 }

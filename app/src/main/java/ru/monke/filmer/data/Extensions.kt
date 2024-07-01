@@ -1,5 +1,11 @@
-package ru.monke.filmer.data.shows
+package ru.monke.filmer.data
 
+import ru.monke.filmer.data.local.RequestEntity
+import ru.monke.filmer.data.shows.GenreRemote
+import ru.monke.filmer.data.shows.Image
+import ru.monke.filmer.data.shows.ImageSet
+import ru.monke.filmer.data.shows.ShowRemote
+import ru.monke.filmer.data.shows.ShowRequest
 import ru.monke.filmer.domain.Genre
 import ru.monke.filmer.domain.Posters
 import ru.monke.filmer.domain.Show
@@ -55,3 +61,15 @@ fun GenreRemote.toDomain(): Genre {
         name = name
     )
 }
+
+fun RequestEntity.toDomain() = ShowRequest(
+    lastRequestTime = lastDate,
+    genreId = genreId,
+    showId = showId
+)
+
+fun ShowRequest.toRoomEntity() = RequestEntity(
+    genreId = genreId,
+    lastDate = lastRequestTime,
+    showId = showId
+)

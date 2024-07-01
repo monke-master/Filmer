@@ -4,8 +4,6 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import ru.monke.filmer.di.ClassProvider
-import ru.monke.filmer.domain.Genre
-import ru.monke.filmer.domain.Show
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -13,7 +11,7 @@ private const val TAG = "ShowRemoteDataSourceImpl"
 
 @Singleton
 class ShowRemoteDataSourceImpl @Inject constructor(
-    private val ktorProvider: ClassProvider<HttpClient>
+    ktorProvider: ClassProvider<HttpClient>
 ): ShowRemoteDataSource {
 
     private val ktor = ktorProvider.get()

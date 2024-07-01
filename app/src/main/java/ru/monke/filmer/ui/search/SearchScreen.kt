@@ -28,16 +28,18 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.orbitmvi.orbit.compose.collectAsState
 import ru.monke.filmer.R
+import ru.monke.filmer.domain.Genre
 import ru.monke.filmer.domain.Show
+import ru.monke.filmer.ui.action
+import ru.monke.filmer.ui.comedy
 import ru.monke.filmer.ui.common.LoadingPlaceholder
 import ru.monke.filmer.ui.common.SearchField
 import ru.monke.filmer.ui.common.ShowItem
 import ru.monke.filmer.ui.common.ShowsList
+import ru.monke.filmer.ui.common.UpdatableShowItem
 import ru.monke.filmer.ui.common.repeat
 import ru.monke.filmer.ui.getMocked
 import ru.monke.filmer.ui.theme.FilmerTheme
-
-const val ALL_CATEGORIES = "All"
 
 @Composable
 fun SearchScreen(
@@ -58,12 +60,16 @@ fun SearchScreen(
             LoadingPlaceholder(text = stringResource(id = R.string.loading_shows))
         } else if (state.error != null) {
             Text(text = "Лошара")
-        } else {
-            state.todayShow?.let {
+        }
+        else {
+            state.searchData?.let { data ->
                 SearchScreenContent(
-                    todayShow = it,
-                    recommendedShows = state.recommendedShows,
-                    onShowItemClicked = onShowItemClicked
+                    genres = data.genres,
+                    todayShow = data.todayShow,
+                    recommendedShows = data.recommendedShows,
+                    onShowItemClicked = onShowItemClicked,
+                    onGenreSelected = searchViewModel::fetchDataByGenre,
+                    isUpdatingData = state.isUpdatingData
                 )
             }
         }
@@ -72,9 +78,12 @@ fun SearchScreen(
 
 @Composable
 private fun SearchScreenContent(
+    genres: List<Genre>,
     todayShow: Show,
     recommendedShows: List<Show>,
-    onShowItemClicked: (Show) -> Unit
+    onShowItemClicked: (Show) -> Unit,
+    onGenreSelected: (Genre) -> Unit,
+    isUpdatingData: Boolean = false
 ) {
     Column(
         modifier = Modifier
@@ -89,21 +98,23 @@ private fun SearchScreenContent(
                 .fillMaxWidth()
                 .padding(top = 16.dp)
         )
-        CategoryChipGroup(
-            categoriesList = listOf(ALL_CATEGORIES, "Action", "Slasher", "Smash someone balls"),
-            modifier = Modifier.padding(top = 16.dp)
+        GenresChipGroup(
+            genres = genres,
+            modifier = Modifier.padding(top = 16.dp),
+            onGenreSelected = onGenreSelected
         )
         Text(
             modifier = Modifier.padding(top = 24.dp),
             text = stringResource(id = R.string.today),
             style = MaterialTheme.typography.headlineLarge,
         )
-        ShowItem(
+        UpdatableShowItem(
             modifier = Modifier
                 .padding(top = 8.dp)
                 .fillMaxWidth(),
             show = todayShow,
-            onItemClicked = onShowItemClicked)
+            onItemClicked = onShowItemClicked,
+            isUpdating = isUpdatingData)
         ShowsList(
             shows = recommendedShows,
             title = stringResource(id = R.string.recommended_for_you),
@@ -112,25 +123,29 @@ private fun SearchScreenContent(
 }
 
 @Composable
-fun CategoryChipGroup(
-    categoriesList: List<String>,
-    modifier: Modifier = Modifier
+fun GenresChipGroup(
+    genres: List<Genre>,
+    modifier: Modifier = Modifier,
+    onGenreSelected: (Genre) -> Unit
 ) {
     var selectedCategory by remember {
-        mutableStateOf(ALL_CATEGORIES)
+        mutableStateOf(genres[0])
     }
     LazyRow(
         modifier = modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.spacedBy(8.dp)
     ) {
-        items(categoriesList) { category ->
-            if (category == selectedCategory) {
-                SelectedCategoryChip(title = category)
+        items(genres) { genre ->
+            if (genre == selectedCategory) {
+                SelectedCategoryChip(title = genre.name)
             } else {
                 CategoryChip(
                     modifier = Modifier
-                        .clickable { selectedCategory = category },
-                    title = category
+                        .clickable {
+                            onGenreSelected(genre)
+                            selectedCategory = genre
+                        },
+                    title = genre.name
                 )
             }
         }
@@ -144,7 +159,7 @@ fun CategoryChip(
 ) {
     Text(
         text = title,
-        modifier = modifier.padding(horizontal = 12.dp, vertical = 8.dp)
+        modifier = modifier.padding(horizontal = 18.dp, vertical = 8.dp)
     )
 }
 
@@ -190,8 +205,11 @@ private fun SearchScreenPreview() {
             color = MaterialTheme.colorScheme.background,
         ) {
             SearchScreenContent(
+                genres = listOf(action, comedy),
                 getMocked(LocalContext.current.resources),
-                listOf(getMocked(LocalContext.current.resources)).repeat(4), {}
+                listOf(getMocked(LocalContext.current.resources)).repeat(4),
+                {},
+                {}
             )
         }
 

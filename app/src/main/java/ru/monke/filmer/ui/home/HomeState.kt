@@ -6,5 +6,5 @@ data class HomeState(
     val freshShows: List<Show> = emptyList(),
     val topShows: List<Show> = emptyList(),
     val isLoading: Boolean = false,
-    val exception: Throwable? = null
+    val exception: Throwable? = null,
 )

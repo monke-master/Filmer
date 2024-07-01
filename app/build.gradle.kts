@@ -4,6 +4,7 @@ plugins {
     alias(libs.plugins.compose.compiler)
     kotlin("plugin.serialization") version "2.0.0"
     kotlin("kapt") version "2.0.0"
+    id("com.google.devtools.ksp") version "2.0.0-1.0.21"
 }
 
 android {
@@ -87,4 +88,9 @@ dependencies {
     implementation(libs.orbit.viewmodel)
 
     implementation(libs.orbit.compose)
+
+    implementation(libs.androidx.room.runtime)
+    annotationProcessor(libs.androidx.room.room.compiler)
+    ksp(libs.androidx.room.room.compiler)
+    implementation(libs.androidx.room.ktx)
 }

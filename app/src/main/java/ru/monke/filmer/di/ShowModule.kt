@@ -2,8 +2,8 @@ package ru.monke.filmer.di
 
 import dagger.Binds
 import dagger.Module
-import ru.monke.filmer.data.shows.PreferencesDataSource
-import ru.monke.filmer.data.shows.PreferencesDataSourceImpl
+import ru.monke.filmer.data.local.RequestLocalDataSource
+import ru.monke.filmer.data.local.RequestLocalDataSourceImpl
 import ru.monke.filmer.data.shows.ShowRemoteDataSource
 import ru.monke.filmer.data.shows.ShowRemoteDataSourceImpl
 import ru.monke.filmer.data.shows.ShowRepositoryImpl
@@ -19,6 +19,6 @@ interface ShowModule {
     fun bindShowRemoteRepository(i: ShowRepositoryImpl): ShowRepository
 
     @Binds
-    fun bindPreferencesDataSource(i: PreferencesDataSourceImpl): PreferencesDataSource
+    fun bindLocalDataSource(i: RequestLocalDataSourceImpl): RequestLocalDataSource
 
 }
