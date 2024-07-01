@@ -1,5 +1,6 @@
 package ru.monke.filmer.data.shows
 
+import ru.monke.filmer.domain.Genre
 import ru.monke.filmer.domain.Show
 
 interface ShowRemoteDataSource {
@@ -22,4 +23,6 @@ interface ShowRemoteDataSource {
         countryCode: String,
         filters: HashMap<String, Any>
     ): Result<List<ShowRemote>>
+
+    suspend fun getGenres(): Result<List<GenreRemote>>
 }

@@ -14,4 +14,6 @@ interface ShowRepository {
     ): Result<List<Show>>
 
     suspend fun getTodayShow(): Result<Show>
+
+    suspend fun getGenres(): Result<List<Genre>>
 }

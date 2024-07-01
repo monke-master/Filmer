@@ -7,6 +7,7 @@ import dagger.Component
 import ru.monke.filmer.ui.home.HomeViewModel
 import ru.monke.filmer.ui.search.SearchViewModel
 import ru.monke.filmer.ui.show.ShowViewModel
+import javax.inject.Singleton
 
 @Component(
     modules = [
@@ -15,6 +16,7 @@ import ru.monke.filmer.ui.show.ShowViewModel
         PreferencesModule::class
     ]
 )
+@Singleton
 interface ApplicationComponent {
 
     fun homeViewModelFactory(): HomeViewModel.Factory

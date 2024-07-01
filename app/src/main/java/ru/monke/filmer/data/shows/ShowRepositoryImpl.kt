@@ -3,6 +3,7 @@ package ru.monke.filmer.data.shows
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import ru.monke.filmer.domain.DAY_IN_MILLIS
+import ru.monke.filmer.domain.Genre
 import ru.monke.filmer.domain.Show
 import ru.monke.filmer.domain.ShowRepository
 import java.util.Calendar
@@ -85,5 +86,15 @@ class ShowRepositoryImpl @Inject constructor(
             return Result.success(show)
         }
         return Result.failure(result.exceptionOrNull()!!)
+    }
+
+    override suspend fun getGenres(): Result<List<Genre>> {
+        return withContext(Dispatchers.IO) {
+            val result = showRemoteDataSource.getGenres()
+            result.onSuccess { list ->
+                return@withContext Result.success(list.map { it.toDomain() })
+            }
+            return@withContext Result.failure(result.exceptionOrNull()!!)
+        }
     }
 }

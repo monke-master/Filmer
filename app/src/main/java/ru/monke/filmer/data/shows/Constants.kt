@@ -1,6 +1,6 @@
 package ru.monke.filmer.data.shows
 
-const val BASE_URl = "https://streaming-availability.p.rapidapi.com/shows/"
+const val BASE_URl = "https://streaming-availability.p.rapidapi.com/"
 const val RAPID_API_KEY = "x-rapidapi-key"
 const val API_KEY = "4ccc906dbbmshc6cb6a39df81420p1d2e4bjsn7a5c6777899c"
 
@@ -10,11 +10,14 @@ const val DEFAULT_COUNTRY_VALUE = "us"
 const val SERVICE_PARAM = "service"
 const val DEFAULT_SERVICE_VALUE = "netflix"
 
-const val TOP_SHOWS_ENDPOINT = "top"
-const val FILTERS_ENDPOINT = "search/filters"
+const val SHOWS_ENDPOINT = "shows"
+const val TOP_SHOWS_ENDPOINT = "$SHOWS_ENDPOINT/top"
+const val FILTERS_ENDPOINT = "shows/search/filters"
 
 const val MIN_YEAR_PARAM = "year_min"
 
 const val ID_PARAM = "id"
 const val RATING_PARAM = "rating_min"
 const val GOOD_RATING = 70
+
+const val GENRES_ENDPOINT = "genres"

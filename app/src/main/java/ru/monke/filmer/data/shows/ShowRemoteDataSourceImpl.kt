@@ -4,14 +4,19 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import ru.monke.filmer.di.ClassProvider
+import ru.monke.filmer.domain.Genre
 import ru.monke.filmer.domain.Show
 import javax.inject.Inject
+import javax.inject.Singleton
 
 private const val TAG = "ShowRemoteDataSourceImpl"
 
+@Singleton
 class ShowRemoteDataSourceImpl @Inject constructor(
     private val ktorProvider: ClassProvider<HttpClient>
 ): ShowRemoteDataSource {
+
+    private val ktor = ktorProvider.get()
 
     override suspend fun getTopShows(
         countryCode: String,
@@ -22,10 +27,10 @@ class ShowRemoteDataSourceImpl @Inject constructor(
                 countryCode = countryCode,
                 service = service
             )
-            val data: List<ShowRemote> =
-                ktorProvider.get().get(request).body()
+            val data: List<ShowRemote> = ktor.get(request).body()
             Result.success(data)
         } catch (e: Exception) {
+            e.printStackTrace()
             Result.failure(e)
         }
     }
@@ -42,7 +47,7 @@ class ShowRemoteDataSourceImpl @Inject constructor(
                     RATING_PARAM to GOOD_RATING.toString(),
                 ),
             )
-            val res = ktorProvider.get().get(request)
+            val res = ktor.get(request)
             val data: ShowResponse = res.body()
             Result.success(data.shows)
         } catch (e: Exception) {
@@ -54,7 +59,8 @@ class ShowRemoteDataSourceImpl @Inject constructor(
     override suspend fun getShowById(id: String): Result<ShowRemote> {
         return try {
             val request = GetShowRequestBuilder().build(id)
-            val data: ShowRemote = ktorProvider.get().get(request).body()
+            val res = ktor.get(request)
+            val data: ShowRemote = res.body()
             Result.success(data)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -71,7 +77,7 @@ class ShowRemoteDataSourceImpl @Inject constructor(
                 countryCode = countryCode,
                 filters = filters
             )
-            val res = ktorProvider.get().get(request)
+            val res = ktor.get(request)
             val data: ShowResponse = res.body()
             Result.success(data.shows)
         } catch (e: Exception) {
@@ -80,5 +86,14 @@ class ShowRemoteDataSourceImpl @Inject constructor(
         }
     }
 
-
+    override suspend fun getGenres(): Result<List<GenreRemote>> {
+        return try {
+            val request = GetGenresRequestBuilder().build()
+            val data: List<GenreRemote> = ktor.get(request).body()
+            Result.success(data)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Result.failure(e)
+        }
+    }
 }

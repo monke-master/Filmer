@@ -11,22 +11,24 @@ import ru.monke.filmer.data.shows.BASE_URl
 import ru.monke.filmer.di.ClassProvider
 import ru.monke.filmer.data.shows.RAPID_API_KEY
 import javax.inject.Inject
+import javax.inject.Singleton
 
-
+@Singleton
 class KtorProvider @Inject constructor(): ClassProvider<HttpClient> {
 
-    override fun get(): HttpClient {
-        val client = HttpClient {
-            install(ContentNegotiation) {
-                json(Json {
-                    ignoreUnknownKeys = true
-                })
-            }
-            install(DefaultRequest) {
-                url(BASE_URl)
-                header(RAPID_API_KEY, API_KEY)
-            }
+    private var client: HttpClient = HttpClient {
+        install(ContentNegotiation) {
+            json(Json {
+                ignoreUnknownKeys = true
+            })
         }
+        install(DefaultRequest) {
+            url(BASE_URl)
+            header(RAPID_API_KEY, API_KEY)
+        }
+    }
+
+    override fun get(): HttpClient {
         return client
     }
 }
