@@ -71,7 +71,10 @@ fun ScreenHolder(
                 }
                 ShowScreen(
                     viewModel = viewModel,
-                    showId = backStackEntry.arguments?.getString(Params.SHOW_ID_PARAM)!!
+                    showId = backStackEntry.arguments?.getString(Params.SHOW_ID_PARAM)!!,
+                    onBackButtonClicked = {
+                        navController.popBackStack()
+                    }
                 )
             }
 

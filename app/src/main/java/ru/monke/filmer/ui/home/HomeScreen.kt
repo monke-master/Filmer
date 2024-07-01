@@ -67,7 +67,7 @@ fun HomeScreen(
         color = MaterialTheme.colorScheme.background,
     ) {
         if (state.isLoading) {
-            LoadingPlaceholder()
+            LoadingPlaceholder(text = stringResource(id = R.string.loading_shows))
         } else if (state.exception != null) {
             Text(text = "Ты обосрался")
         } else {

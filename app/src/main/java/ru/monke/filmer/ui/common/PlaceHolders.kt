@@ -41,7 +41,9 @@ fun LoadingIndicatorPreview() {
 }
 
 @Composable
-fun LoadingPlaceholder() {
+fun LoadingPlaceholder(
+    text: String? = null
+) {
     Column(
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
@@ -49,6 +51,9 @@ fun LoadingPlaceholder() {
         LoadingIndicator(
             modifier = Modifier.size(48.dp)
         )
-        Text(text = stringResource(id = R.string.loading_shows))
+        text?.let {
+            Text(text = text)
+        }
+
     }
 }

@@ -55,7 +55,7 @@ fun SearchScreen(
         color = MaterialTheme.colorScheme.background,
     ) {
         if (state.isLoading) {
-            LoadingPlaceholder()
+            LoadingPlaceholder(text = stringResource(id = R.string.loading_shows))
         } else if (state.error != null) {
             Text(text = "Лошара")
         } else {

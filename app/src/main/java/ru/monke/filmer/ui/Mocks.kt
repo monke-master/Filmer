@@ -30,7 +30,7 @@ fun getMocked(resources: Resources): Show {
         title = "Spider Man: Bomb Ukraine",
         rating = 98,
         duration = 123,
-        year = Calendar.getInstance().timeInMillis.toInt(),
+        year = 2024,
         posters = Posters(),
         overview = "For the first time in the cinematic history of Spider-Man, our friendly neighborhood hero's identity is revealed, bringing his Super Hero responsibilities into conflict with his normal life and putting those he cares about most at risk. ",
         genres = listOf(action)

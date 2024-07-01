@@ -1,6 +1,7 @@
 package ru.monke.filmer.ui.show
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -44,7 +45,9 @@ import ru.monke.filmer.R
 import ru.monke.filmer.domain.Show
 import ru.monke.filmer.ui.common.DescriptionItem
 import ru.monke.filmer.ui.common.LoadingIndicator
+import ru.monke.filmer.ui.common.LoadingPlaceholder
 import ru.monke.filmer.ui.common.RatingBadge
+import ru.monke.filmer.ui.common.ShimmerPoster
 import ru.monke.filmer.ui.common.getRating
 import ru.monke.filmer.ui.common.getYear
 import ru.monke.filmer.ui.common.quantityStringResource
@@ -56,7 +59,8 @@ import ru.monke.filmer.ui.theme.SoftBlue
 @Composable
 fun ShowScreen(
     viewModel: ShowViewModel,
-    showId: String
+    showId: String,
+    onBackButtonClicked: () -> Unit
 ) {
     LaunchedEffect(key1 = showId) {
         viewModel.getShow(showId)
@@ -68,13 +72,16 @@ fun ShowScreen(
         color = MaterialTheme.colorScheme.background,
     ) {
         if (state.isLoading) {
-            LoadingIndicator()
+            LoadingPlaceholder(text = stringResource(id = R.string.loading_shows))
         } else if (state.error != null) {
-
-        }
-
-        state.show?.let {
-            ShowScreenContent(show = it)
+            Text(text = state.error?.localizedMessage ?: " ")
+        } else {
+            state.show?.let {
+                ShowScreenContent(
+                    show = it,
+                    onBackButtonClicked = onBackButtonClicked
+                )
+            }
         }
     }
 
@@ -82,13 +89,14 @@ fun ShowScreen(
 
 @Composable
 private fun ShowScreenContent(
-    show: Show
+    show: Show,
+    onBackButtonClicked: () -> Unit
 ) {
     Column(
         modifier = Modifier.verticalScroll(rememberScrollState())
     ) {
         Box {
-            BackgroundPoster(cover = show.posters.verticalPoster)
+            BackgroundPoster(show)
             Column(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalAlignment = Alignment.CenterHorizontally
@@ -97,12 +105,16 @@ private fun ShowScreenContent(
                     modifier = Modifier
                         .padding(top = 8.dp, start = 16.dp, end = 16.dp)
                         .fillMaxWidth(),
-                    title = show.title
+                    title = show.title,
+                    onBackButtonClicked = onBackButtonClicked
                 )
-                Poster(
-                    modifier = Modifier.padding(top = 24.dp),
-                    cover = show.posters.verticalPoster
-                )
+                ShimmerPoster(
+                    show = show,
+                    modifier = Modifier
+                        .padding(top = 24.dp)
+                        .height(287.dp)
+                        .width(205.dp)
+                        .clip(RoundedCornerShape(12.dp)))
                 ShowDescription(
                     modifier = Modifier.padding(top = 16.dp),
                     show = show)
@@ -122,7 +134,8 @@ private fun ShowScreenContent(
 @Composable
 private fun Toolbar(
     modifier: Modifier = Modifier,
-    title: String
+    title: String,
+    onBackButtonClicked: () -> Unit
 ) {
     Row(
         modifier = modifier,
@@ -135,7 +148,8 @@ private fun Toolbar(
                     color = SoftBlue,
                     shape = RoundedCornerShape(12.dp)
                 )
-                .padding(4.dp),
+                .padding(4.dp)
+                .clickable { onBackButtonClicked() },
             painter = painterResource(id = R.drawable.ic_back),
             contentDescription = null
         )
@@ -158,9 +172,10 @@ private fun Toolbar(
 
 @Composable
 private fun BackgroundPoster(
-    cover: String?
+    show: Show,
 ) {
-    AsyncImage(
+    ShimmerPoster(
+        show = show,
         modifier = Modifier
             .fillMaxWidth()
             .height(450.dp)
@@ -178,13 +193,6 @@ private fun BackgroundPoster(
                     drawRect(gradient, blendMode = BlendMode.Multiply)
                 }
             },
-        model = ImageRequest.Builder(LocalContext.current)
-            .data(cover)
-            .crossfade(true)
-            .placeholder(R.drawable.example_show)
-            .build(),
-        contentDescription = "",
-        contentScale = ContentScale.Crop
     )
 }
 
@@ -195,9 +203,7 @@ private fun Poster(
 ) {
     AsyncImage(
         modifier = modifier
-            .height(287.dp)
-            .width(205.dp)
-            .clip(RoundedCornerShape(12.dp)),
+            ,
         model = ImageRequest.Builder(LocalContext.current)
             .data(cover)
             .crossfade(true)
@@ -268,7 +274,8 @@ fun ShowScreenPreview() {
             color = MaterialTheme.colorScheme.background,
         ) {
             ShowScreenContent(
-                show = getMocked(LocalContext.current.resources)
+                show = getMocked(LocalContext.current.resources),
+                onBackButtonClicked = {}
             )
         }
     }
