@@ -36,7 +36,7 @@ fun SearchResultList(
 ) {
     LazyColumn {
         items(results) { show ->
-            ShowItem(show = show)
+            ShowItem(show = show, onItemClicked =  {})
         }
     }
 }

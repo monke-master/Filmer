@@ -2,6 +2,7 @@ package ru.monke.filmer.ui.common
 
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -85,10 +86,13 @@ private fun RatingBadgePreview() {
 @Composable
 fun ShowItem(
     modifier: Modifier = Modifier,
-    show: Show
+    show: Show,
+    onItemClicked: (Show) -> Unit
 ) {
     Row(
-        modifier = modifier.padding(top = 16.dp)
+        modifier = modifier
+                    .padding(top = 16.dp)
+                    .clickable { onItemClicked(show) }
     ) {
         ShowPoster(show)
         ShowDescription(
@@ -187,7 +191,7 @@ private fun ShowItemPreview() {
         Surface(
             modifier = Modifier.fillMaxWidth()
         ) {
-            ShowItem(show = getMocked(LocalContext.current.resources))
+            ShowItem(show = getMocked(LocalContext.current.resources), onItemClicked = {})
         }
     }
 }

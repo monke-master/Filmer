@@ -8,7 +8,9 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -52,25 +54,35 @@ fun SearchScreen(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background,
     ) {
-        state.todayShow?.let {
-            SearchScreenContent(todayShow = it)
-        }
         if (state.isLoading) {
             LoadingPlaceholder()
         } else if (state.error != null) {
             Text(text = "Лошара")
+        } else {
+            state.todayShow?.let {
+                SearchScreenContent(
+                    todayShow = it,
+                    recommendedShows = state.recommendedShows,
+                    onShowItemClicked = onShowItemClicked
+                )
+            }
         }
     }
 }
 
 @Composable
 private fun SearchScreenContent(
-    todayShow: Show
+    todayShow: Show,
+    recommendedShows: List<Show>,
+    onShowItemClicked: (Show) -> Unit
 ) {
     Column(
-        modifier = Modifier.padding(
-            horizontal = 16.dp,
-            vertical = 8.dp)
+        modifier = Modifier
+            .padding(
+                horizontal = 16.dp,
+                vertical = 8.dp
+            )
+            .verticalScroll(rememberScrollState())
     ) {
         SearchTextField(
             modifier = Modifier
@@ -87,11 +99,15 @@ private fun SearchScreenContent(
             style = MaterialTheme.typography.headlineLarge,
         )
         ShowItem(
-            modifier = Modifier.padding(top = 8.dp),
-            show = todayShow)
+            modifier = Modifier
+                .padding(top = 8.dp)
+                .fillMaxWidth(),
+            show = todayShow,
+            onItemClicked = onShowItemClicked)
         ShowsList(
-            shows = listOf(getMocked(LocalContext.current.resources)).repeat(4),
-            title = stringResource(id = R.string.recommended_for_you))
+            shows = recommendedShows,
+            title = stringResource(id = R.string.recommended_for_you),
+            onItemClicked = onShowItemClicked)
     }
 }
 
@@ -170,6 +186,14 @@ fun SearchTextField(
 @Composable
 private fun SearchScreenPreview() {
     FilmerTheme {
-        SearchScreenContent(getMocked(LocalContext.current.resources))
+        Surface(
+            color = MaterialTheme.colorScheme.background,
+        ) {
+            SearchScreenContent(
+                getMocked(LocalContext.current.resources),
+                listOf(getMocked(LocalContext.current.resources)).repeat(4), {}
+            )
+        }
+
     }
 }
