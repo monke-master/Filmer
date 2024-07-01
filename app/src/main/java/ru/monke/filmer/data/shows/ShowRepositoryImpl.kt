@@ -4,6 +4,7 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import ru.monke.filmer.data.local.RequestLocalDataSource
 import ru.monke.filmer.data.toDomain
+import ru.monke.filmer.data.toPaginationResult
 import ru.monke.filmer.domain.ALL_GENRE
 import ru.monke.filmer.domain.DAY_IN_MILLIS
 import ru.monke.filmer.domain.Genre
@@ -57,7 +58,7 @@ class ShowRepositoryImpl @Inject constructor(
                 filters = filters
             )
             result.onSuccess { value ->
-                return@withContext Result.success(value.map { it.toDomain() })
+                return@withContext Result.success(value.shows.map { it.toDomain() })
             }
             Result.failure(result.exceptionOrNull()!!)
         }
@@ -77,7 +78,7 @@ class ShowRepositoryImpl @Inject constructor(
 
     private suspend fun getTodayShowInternal(genre: Genre): Result<Show> {
         val rating = (0..90).random()
-        val filters = hashMapOf<String, Any>(RATING_PARAM to rating)
+        val filters = hashMapOf<String, Any>(MIN_RATING_PARAM to rating)
         if (genre.id != ALL_GENRE.id) filters[GENRES_PARAM] = genre.name
 
         val result = getShowsByFilters(filters = filters)
@@ -104,4 +105,23 @@ class ShowRepositoryImpl @Inject constructor(
             return@withContext Result.failure(result.exceptionOrNull()!!)
         }
     }
+
+    override suspend fun getShowsByFiltersWithCursor(
+        countryCode: String?,
+        nextCursor: String?,
+        filters: HashMap<String, Any>,
+    ): Result<PaginationResult<Show>> {
+        return withContext(Dispatchers.IO) {
+            nextCursor?.let { filters[CURSOR_PARAM] = nextCursor }
+            val result = showRemoteDataSource.getShowsByFilter(
+                countryCode = countryCode ?: DEFAULT_COUNTRY_VALUE,
+                filters = filters
+            )
+            result.onSuccess { value ->
+                return@withContext Result.success(value.toPaginationResult())
+            }
+            Result.failure(result.exceptionOrNull()!!)
+        }
+    }
+
 }

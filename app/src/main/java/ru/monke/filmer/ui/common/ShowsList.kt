@@ -43,7 +43,8 @@ fun ShowsList(
     modifier: Modifier = Modifier,
     shows: List<Show>,
     title: String,
-    onItemClicked: (Show) -> Unit = {}
+    onItemClicked: (Show) -> Unit = {},
+    onShowLoad: () -> Unit = {}
 ) {
     Row(
         modifier = modifier
@@ -66,7 +67,11 @@ fun ShowsList(
         modifier = Modifier.padding(top = 16.dp, bottom = 16.dp),
         horizontalArrangement = Arrangement.spacedBy(12.dp),
     ) {
-        items(shows) { show ->
+        items(shows.size) { index ->
+            if (index >= shows.size - 1) {
+                onShowLoad()
+            }
+            val show = shows[index]
             SmallShowItem(
                 show = show,
                 modifier = Modifier.clickable { onItemClicked(show) }

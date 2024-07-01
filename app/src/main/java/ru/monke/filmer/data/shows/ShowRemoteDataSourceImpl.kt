@@ -25,7 +25,8 @@ class ShowRemoteDataSourceImpl @Inject constructor(
                 countryCode = countryCode,
                 service = service
             )
-            val data: List<ShowRemote> = ktor.get(request).body()
+            val res = ktor.get(request)
+            val data: List<ShowRemote> = res.body()
             Result.success(data)
         } catch (e: Exception) {
             e.printStackTrace()
@@ -42,7 +43,7 @@ class ShowRemoteDataSourceImpl @Inject constructor(
                 countryCode = countryCode,
                 filters = hashMapOf(
                     MIN_YEAR_PARAM to year.toString(),
-                    RATING_PARAM to GOOD_RATING.toString(),
+                    MIN_RATING_PARAM to GOOD_RATING.toString(),
                 ),
             )
             val res = ktor.get(request)
@@ -68,8 +69,8 @@ class ShowRemoteDataSourceImpl @Inject constructor(
 
     override suspend fun getShowsByFilter(
         countryCode: String,
-        filters: HashMap<String, Any>
-    ): Result<List<ShowRemote>> {
+        filters: HashMap<String, Any>,
+    ): Result<ShowResponse> {
         return try {
             val request = FilterRequestBuilder().build(
                 countryCode = countryCode,
@@ -77,7 +78,7 @@ class ShowRemoteDataSourceImpl @Inject constructor(
             )
             val res = ktor.get(request)
             val data: ShowResponse = res.body()
-            Result.success(data.shows)
+            Result.success(data)
         } catch (e: Exception) {
             e.printStackTrace()
             Result.failure(e)

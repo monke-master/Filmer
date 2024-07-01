@@ -4,8 +4,10 @@ import ru.monke.filmer.data.local.RequestEntity
 import ru.monke.filmer.data.shows.GenreRemote
 import ru.monke.filmer.data.shows.Image
 import ru.monke.filmer.data.shows.ImageSet
+import ru.monke.filmer.data.shows.PaginationResult
 import ru.monke.filmer.data.shows.ShowRemote
 import ru.monke.filmer.data.shows.ShowRequest
+import ru.monke.filmer.data.shows.ShowResponse
 import ru.monke.filmer.domain.Genre
 import ru.monke.filmer.domain.Posters
 import ru.monke.filmer.domain.Show
@@ -72,4 +74,9 @@ fun ShowRequest.toRoomEntity() = RequestEntity(
     genreId = genreId,
     lastDate = lastRequestTime,
     showId = showId
+)
+
+fun ShowResponse.toPaginationResult() = PaginationResult(
+    items = shows.map { it.toDomain() },
+    nextKey = if (hasMore == true) nextCursor else null
 )

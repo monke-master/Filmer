@@ -69,7 +69,8 @@ fun SearchScreen(
                     recommendedShows = data.recommendedShows,
                     onShowItemClicked = onShowItemClicked,
                     onGenreSelected = searchViewModel::fetchDataByGenre,
-                    isUpdatingData = state.isUpdatingData
+                    isUpdatingData = state.isUpdatingData,
+                    onShowLoad = searchViewModel::loadShows
                 )
             }
         }
@@ -83,7 +84,8 @@ private fun SearchScreenContent(
     recommendedShows: List<Show>,
     onShowItemClicked: (Show) -> Unit,
     onGenreSelected: (Genre) -> Unit,
-    isUpdatingData: Boolean = false
+    isUpdatingData: Boolean = false,
+    onShowLoad: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -118,7 +120,8 @@ private fun SearchScreenContent(
         ShowsList(
             shows = recommendedShows,
             title = stringResource(id = R.string.recommended_for_you),
-            onItemClicked = onShowItemClicked)
+            onItemClicked = onShowItemClicked,
+            onShowLoad = onShowLoad)
     }
 }
 
@@ -197,6 +200,7 @@ fun SearchTextField(
 
 
 
+
 @Preview
 @Composable
 private fun SearchScreenPreview() {
@@ -209,7 +213,8 @@ private fun SearchScreenPreview() {
                 getMocked(LocalContext.current.resources),
                 listOf(getMocked(LocalContext.current.resources)).repeat(4),
                 {},
-                {}
+                {},
+                onShowLoad = {}
             )
         }
 

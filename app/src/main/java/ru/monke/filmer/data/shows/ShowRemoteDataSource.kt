@@ -22,7 +22,7 @@ interface ShowRemoteDataSource {
     suspend fun getShowsByFilter(
         countryCode: String,
         filters: HashMap<String, Any>
-    ): Result<List<ShowRemote>>
+    ): Result<ShowResponse>
 
     suspend fun getGenres(): Result<List<GenreRemote>>
 }
