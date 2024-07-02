@@ -16,6 +16,7 @@ import ru.monke.filmer.data.pagination.TopShowsLoader
 import ru.monke.filmer.di.ApplicationComponent
 import ru.monke.filmer.di.DaggerApplicationComponent
 import ru.monke.filmer.di.daggerViewModel
+import ru.monke.filmer.domain.Genre
 import ru.monke.filmer.domain.Show
 import ru.monke.filmer.ui.home.HomeScreen
 import ru.monke.filmer.ui.home.HomeViewModel
@@ -67,7 +68,7 @@ fun ScreenHolder(
                     searchViewModel = viewModel,
                     onShowItemClicked = onShowClicked,
                     toShowsListNav = { genre ->
-                        navController.navigate("showsList/${genre.id}")
+                        navController.navigate("showsList/${genre.id}&${genre.name}")
                     }
                 )
             }
@@ -99,12 +100,17 @@ fun ScreenHolder(
                 )
             }
             composable(
-                route = "showsList/{genreId}",
-                arguments = listOf(navArgument("genreId") { type = NavType.StringType })
+                route = "showsList/{genreId}&{genreName}",
+                arguments = listOf(
+                    navArgument("genreId") { type = NavType.StringType },
+                    navArgument("genreName") { type = NavType.StringType },
+                    )
             ) { navBackStack ->
                 val genreId = navBackStack.arguments?.getString("genreId")!!
+                val genreName = navBackStack.arguments?.getString("genreName")!!
+                val genre = Genre(genreId, genreName)
                 val viewModel = daggerViewModel {
-                    applicationComponent.recommendedShowViewModelFactory().create(ShowsListViewModel::class.java, genreId)
+                    applicationComponent.recommendedShowViewModelFactory().create(ShowsListViewModel::class.java, genre)
                 }
                 ShowsListScreen(
                     showsListViewModel = viewModel,

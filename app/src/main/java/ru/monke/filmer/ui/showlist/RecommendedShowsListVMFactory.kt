@@ -10,7 +10,7 @@ class RecommendedShowsListVMFactory @Inject constructor(
     private val loaderFactory: RecommendedShowsLoader.Factory
 ): ViewModelProvider.Factory {
 
-    fun <T : ViewModel> create(modelClass: Class<T>, genreId: String): T {
-        return (ShowsListViewModel(loaderFactory.create(genreId))) as T
+    fun <T : ViewModel> create(modelClass: Class<T>, genre: Genre): T {
+        return (ShowsListViewModel(loaderFactory.create(genre))) as T
     }
 }

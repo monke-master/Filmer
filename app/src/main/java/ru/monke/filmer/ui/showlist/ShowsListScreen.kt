@@ -112,7 +112,7 @@ private fun ShowsListScreenPreview() {
         ) {
             ShowsListScreenContent(
                 title = "Летим в Хмеймим",
-                state = ShowsListState(items = listOf(getMocked(LocalContext.current.resources)).repeat(6)),
+                state = ShowsListState(items = listOf(getMocked(LocalContext.current.resources)).repeat(2), isLoadingNext = true),
                 onItemsLoad = {}, onItemClicked = {}
             )
         }
