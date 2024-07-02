@@ -46,7 +46,7 @@ fun SearchScreen(
     searchViewModel: SearchViewModel,
     onShowItemClicked: (Show) -> Unit = {}
 ) {
-    LaunchedEffect(key1 = null) {
+    LaunchedEffect(key1 = searchViewModel) {
         searchViewModel.fetchData()
     }
     

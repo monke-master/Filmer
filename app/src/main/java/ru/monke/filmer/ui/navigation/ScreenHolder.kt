@@ -4,21 +4,27 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import ru.monke.filmer.R
+import ru.monke.filmer.data.pagination.TopShowsLoader
 import ru.monke.filmer.di.ApplicationComponent
 import ru.monke.filmer.di.DaggerApplicationComponent
 import ru.monke.filmer.di.daggerViewModel
+import ru.monke.filmer.domain.Show
 import ru.monke.filmer.ui.home.HomeScreen
 import ru.monke.filmer.ui.home.HomeViewModel
 import ru.monke.filmer.ui.search.SearchScreen
 import ru.monke.filmer.ui.search.SearchViewModel
 import ru.monke.filmer.ui.show.ShowScreen
 import ru.monke.filmer.ui.show.ShowViewModel
+import ru.monke.filmer.ui.showlist.ShowsListScreen
+import ru.monke.filmer.ui.showlist.ShowsListViewModel
 import ru.monke.filmer.ui.theme.FilmerTheme
 
 @Composable
@@ -40,14 +46,16 @@ fun ScreenHolder(
             startDestination = NavigationItem.Home.route,
             modifier = Modifier.padding(innerPadding)
         ) {
+            val onShowClicked: (Show) -> Unit = { navController.navigate("show/${it.id}") }
             composable(NavigationItem.Home.route) { entry ->
                 val viewModel = daggerViewModel {
                     applicationComponent.homeViewModelFactory().create(HomeViewModel::class.java)
                 }
                 HomeScreen(
                     viewModel = viewModel,
-                    onShowItemClicked = { show ->
-                        navController.navigate("show/${show.id}")
+                    onShowItemClicked = onShowClicked,
+                    toShowsListNav = {
+                        navController.navigate("showsList/bestShows")
                     }
                 )
             }
@@ -57,9 +65,7 @@ fun ScreenHolder(
                 }
                 SearchScreen(
                     searchViewModel = viewModel,
-                    onShowItemClicked =  { show ->
-                        navController.navigate("show/${show.id}")
-                    }
+                    onShowItemClicked = onShowClicked
                 )
             }
             composable(
@@ -77,10 +83,22 @@ fun ScreenHolder(
                     }
                 )
             }
-
+            composable(
+                route = "showsList/bestShows",
+            ) { navBackStackEntry ->
+                val viewModel = daggerViewModel {
+                   applicationComponent.topShowsViewModelFactory().create(ShowsListViewModel::class.java)
+                }
+                ShowsListScreen(
+                    showsListViewModel = viewModel,
+                    title = stringResource(id = R.string.most_popular),
+                    onShowItemClicked = onShowClicked
+                )
+            }
         }
     }
 }
+
 
 @Composable
 @Preview

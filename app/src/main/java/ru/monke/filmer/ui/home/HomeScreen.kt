@@ -53,7 +53,8 @@ import ru.monke.filmer.ui.theme.White
 @Composable
 fun HomeScreen(
     viewModel: HomeViewModel,
-    onShowItemClicked: (Show) -> Unit
+    onShowItemClicked: (Show) -> Unit,
+    toShowsListNav: () -> Unit
 ) {
     LaunchedEffect(key1 = null) {
         viewModel.fetchData()
@@ -74,7 +75,8 @@ fun HomeScreen(
             HomeScreenContent(
                 freshShows = state.freshShows,
                 topShows = state.topShows,
-                onShowItemClicked = onShowItemClicked
+                onShowItemClicked = onShowItemClicked,
+                toShowsListNav = toShowsListNav
             )
         }
     }
@@ -84,7 +86,8 @@ fun HomeScreen(
 private fun HomeScreenContent(
     topShows: List<Show>,
     freshShows: List<Show>,
-    onShowItemClicked: (Show) -> Unit
+    onShowItemClicked: (Show) -> Unit,
+    toShowsListNav: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -103,7 +106,8 @@ private fun HomeScreenContent(
         ShowsList(
             shows = topShows,
             title = stringResource(id = R.string.most_popular),
-            onItemClicked = onShowItemClicked
+            onItemClicked = onShowItemClicked,
+            onAllShowsClicked = toShowsListNav
         )
     }
 }
@@ -197,7 +201,8 @@ private fun HomePreview() {
             HomeScreenContent(
                 topShows = listOf(getMocked(LocalContext.current.resources)).repeat(10),
                 freshShows = listOf(getMocked(LocalContext.current.resources)).repeat(10),
-                onShowItemClicked = {}
+                onShowItemClicked = {},
+                toShowsListNav = {}
             )
         }
     }

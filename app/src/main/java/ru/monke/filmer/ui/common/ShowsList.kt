@@ -46,7 +46,8 @@ fun ShowsList(
     shows: List<Show>,
     title: String,
     onItemClicked: (Show) -> Unit = {},
-    onShowLoad: () -> Unit = {}
+    onShowLoad: () -> Unit = {},
+    onAllShowsClicked: () -> Unit = {}
 ) {
     Row(
         modifier = modifier
@@ -61,7 +62,8 @@ fun ShowsList(
         Text(
             text = stringResource(id = R.string.see_all),
             style = MaterialTheme.typography.headlineMedium,
-            color = BlueAccent
+            color = BlueAccent,
+            modifier = Modifier.clickable { onAllShowsClicked() }
         )
     }
 

@@ -7,6 +7,7 @@ import dagger.Component
 import ru.monke.filmer.ui.home.HomeViewModel
 import ru.monke.filmer.ui.search.SearchViewModel
 import ru.monke.filmer.ui.show.ShowViewModel
+import ru.monke.filmer.ui.showlist.TopShowsViewModelFactory
 import javax.inject.Singleton
 
 @Component(
@@ -24,6 +25,8 @@ interface ApplicationComponent {
     fun showViewModelFactory(): ShowViewModel.Factory
 
     fun searchViewModelFactory(): SearchViewModel.Factory
+
+    fun topShowsViewModelFactory(): TopShowsViewModelFactory
 
     @Component.Builder
     interface Builder {
