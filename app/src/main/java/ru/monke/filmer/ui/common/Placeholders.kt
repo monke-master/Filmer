@@ -36,7 +36,7 @@ fun LoadingIndicator(
 
 @Composable
 @Preview
-fun LoadingIndicatorPreview() {
+private fun LoadingIndicatorPreview() {
     FilmerTheme {
         Column(
             modifier = Modifier.fillMaxSize(),

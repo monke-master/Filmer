@@ -36,6 +36,7 @@ import ru.monke.filmer.ui.common.LoadingPlaceholder
 import ru.monke.filmer.ui.common.SearchField
 import ru.monke.filmer.ui.common.ShowsList
 import ru.monke.filmer.ui.common.UpdatableShowItem
+import ru.monke.filmer.ui.common.UpdatableShowsList
 import ru.monke.filmer.ui.common.repeat
 import ru.monke.filmer.ui.getMocked
 import ru.monke.filmer.ui.theme.FilmerTheme
@@ -111,11 +112,12 @@ private fun SearchScreenContent(
             show = todayShowState.todayShow,
             onItemClicked = onShowItemClicked,
             isUpdating = todayShowState.isLoading)
-        ShowsList(
+        UpdatableShowsList(
             shows = recommendedShowsState.shows,
             title = stringResource(id = R.string.recommended_for_you),
             onItemClicked = onShowItemClicked,
-            onShowLoad = onShowLoad)
+            onShowLoad = onShowLoad,
+            isUpdating = recommendedShowsState.isLoading)
     }
 }
 
@@ -192,9 +194,6 @@ fun SearchTextField(
     }
 }
 
-
-
-
 @Preview
 @Composable
 private fun SearchScreenPreview() {
@@ -211,6 +210,5 @@ private fun SearchScreenPreview() {
                 onShowLoad = {}
             )
         }
-
     }
 }
