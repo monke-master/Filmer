@@ -2,7 +2,7 @@ package ru.monke.filmer.data.shows
 
 const val BASE_URl = "https://streaming-availability.p.rapidapi.com/"
 const val RAPID_API_KEY = "x-rapidapi-key"
-const val API_KEY = "3ea3eb332amsh135d05e8b4a6a84p18e2b1jsn0660252f199f"
+const val API_KEY = "a22d4e01dcmsh4fc3c75138b4fc9p1dbf8fjsn1d91c71bad90"
 
 const val COUNTRY_PARAM = "country"
 const val DEFAULT_COUNTRY_VALUE = "us"

@@ -1,5 +1,6 @@
 package ru.monke.filmer.ui.common
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -105,7 +106,7 @@ private fun SmallShowItem(
         )
         Text(
             modifier = Modifier.padding(top = 4.dp, bottom = 8.dp, start = 8.dp),
-            text = show.genres[0].name,
+            text = show.getGenre(),
             overflow = TextOverflow.Ellipsis,
             maxLines = 1,
             style = MaterialTheme.typography.bodyMedium,

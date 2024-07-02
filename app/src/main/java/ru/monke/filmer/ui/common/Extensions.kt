@@ -1,5 +1,6 @@
 package ru.monke.filmer.ui.common
 
+import ru.monke.filmer.domain.Show
 import java.util.ArrayList
 import java.util.Calendar
 
@@ -14,8 +15,9 @@ fun<T> List<T>.repeat(n: Int): List<T> {
 }
 
 
-fun Long.getYear(): Int {
-    val calendar = Calendar.getInstance()
-    calendar.timeInMillis = this
-    return calendar.get(Calendar.YEAR)
+fun Show.getGenre(): String {
+    if (genres.size > 0) {
+        return genres[0].name
+    }
+    return ""
 }

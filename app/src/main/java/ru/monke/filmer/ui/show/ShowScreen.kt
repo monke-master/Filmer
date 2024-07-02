@@ -44,14 +44,11 @@ import org.orbitmvi.orbit.compose.collectAsState
 import ru.monke.filmer.R
 import ru.monke.filmer.domain.Show
 import ru.monke.filmer.ui.common.DescriptionItem
-import ru.monke.filmer.ui.common.LoadingIndicator
 import ru.monke.filmer.ui.common.LoadingPlaceholder
 import ru.monke.filmer.ui.common.RatingBadge
 import ru.monke.filmer.ui.common.ShimmerPoster
 import ru.monke.filmer.ui.common.getRating
-import ru.monke.filmer.ui.common.getYear
 import ru.monke.filmer.ui.common.quantityStringResource
-import ru.monke.filmer.ui.common.showViewModel
 import ru.monke.filmer.ui.getMocked
 import ru.monke.filmer.ui.theme.FilmerTheme
 import ru.monke.filmer.ui.theme.SoftBlue

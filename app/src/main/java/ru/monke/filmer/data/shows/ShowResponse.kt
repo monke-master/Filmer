@@ -6,5 +6,5 @@ import kotlinx.serialization.Serializable
 data class ShowResponse(
     val shows: List<ShowRemote>,
     val hasMore: Boolean?,
-    val nextCursor: String?
+    val nextCursor: String? = null
 )
