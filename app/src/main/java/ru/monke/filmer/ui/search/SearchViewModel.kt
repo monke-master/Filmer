@@ -6,22 +6,19 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
 import kotlinx.coroutines.async
 import kotlinx.coroutines.launch
-import org.orbitmvi.orbit.Container
 import org.orbitmvi.orbit.ContainerHost
 import org.orbitmvi.orbit.syntax.simple.intent
 import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import ru.monke.filmer.data.pagination.DefaultPaginator
 import ru.monke.filmer.data.pagination.Paginator
+import ru.monke.filmer.data.shows.PaginationResult
 import ru.monke.filmer.domain.ALL_GENRE
 import ru.monke.filmer.domain.Genre
 import ru.monke.filmer.domain.GetGenresUseCase
 import ru.monke.filmer.domain.GetRecommendedShowsUseCase
-import ru.monke.filmer.domain.GetShowByIdUseCase
 import ru.monke.filmer.domain.GetTodayShowUseCase
-import ru.monke.filmer.domain.GetTopShowsUseCase
 import ru.monke.filmer.domain.Show
-import ru.monke.filmer.ui.show.ShowViewModel
 import javax.inject.Inject
 
 private const val TAG = "SearchViewModel"
@@ -37,10 +34,7 @@ class SearchViewModel(
     private var selectedGenre = ALL_GENRE
 
     private val paginator: Paginator<Show> = DefaultPaginator(
-        onLoadItems = { cursor ->
-            intent { reduce { state.copy(isUpdatingData = true) } }
-            getRecommendedShowsUseCase.execute(cursor, genre = selectedGenre)
-        },
+        onLoadItems = this::loadRecommendedShows,
         onError = {
             intent { reduce { state.copy(error = it, isLoading = false) } }
         },
@@ -48,10 +42,11 @@ class SearchViewModel(
             intent {
                 reduce {
                     state.copy(
-                        searchData = state.searchData?.copy(
-                            recommendedShows = (state.searchData?.recommendedShows ?: emptyList()) + it
+                        recommendedShowsState = RecommendedShowsState(
+                            shows = (state.recommendedShowsState?.shows ?: emptyList()) + it
                         ),
-                        isUpdatingData = false)
+                        isLoading = false
+                    )
                 }
             }
         }
@@ -81,12 +76,11 @@ class SearchViewModel(
 
             reduce {
                 state.copy(
-                    searchData = SearchData(
-                        todayShow = todayShow,
-                        genres = listOf(ALL_GENRE) + genres,
-                        recommendedShows = recommendedShows.items
-                    ),
+                    todayShowState = TodayShowState(todayShow),
+                    recommendedShowsState = RecommendedShowsState(recommendedShows.items),
+                    genres = listOf(ALL_GENRE) + genres,
                     isLoading = false,
+                    isSuccess = true
                 )
             }
         }
@@ -94,40 +88,60 @@ class SearchViewModel(
 
     fun fetchDataByGenre(genre: Genre) {
         intent {
-            reduce { state.copy(isUpdatingData = true, searchData = state.searchData?.copy(recommendedShows = emptyList())) }
             selectedGenre = genre
-            val todayShowDef = viewModelScope.async { getTodayShowUseCase.execute(genre) }
-            val recommendedShowsDef = viewModelScope.async { getRecommendedShowsUseCase.execute(genre = genre) }
+            val todayShowDef = viewModelScope.async { loadTodayShow() }
+            val recommendedShowsDef = viewModelScope.async { loadNewRecommendedShows() }
 
-            val todayShowResult = todayShowDef.await()
-            val recommendedShowsResult = recommendedShowsDef.await()
-
-            todayShowResult.onFailure {
+            val todayShow = todayShowDef.await().getOrElse {
                 reduce { state.copy(isLoading = false, error = it) }
                 return@intent
             }
-            recommendedShowsResult.onFailure {
+            val recommendedShows = recommendedShowsDef.await().getOrElse {
                 reduce { state.copy(isLoading = false, error = it) }
                 return@intent
             }
 
-            paginator.setKey(recommendedShowsResult.getOrNull()?.nextKey)
-            paginator.loadNext()
-
-            Log.d(TAG, "fetchDataByGenre: " + todayShowResult.toString())
+            paginator.setKey(recommendedShows.nextKey)
 
             reduce {
                 state.copy(
-                    searchData = state.searchData?.copy(
-                        todayShow = todayShowResult.getOrNull()!!
-                    ),
-                    isUpdatingData = false
+                    todayShowState = TodayShowState(todayShow = todayShow),
+                    recommendedShowsState = RecommendedShowsState(shows = recommendedShows.items)
                 )
             }
         }
     }
 
-    fun loadShows() {
+    private suspend fun loadTodayShow(): Result<Show> {
+        intent {
+            reduce {
+                state.copy(todayShowState = state.todayShowState?.copy(isLoading = true))
+            }
+        }
+        return getTodayShowUseCase.execute(selectedGenre)
+    }
+
+    private suspend fun loadRecommendedShows(cursor: String? = null): Result<PaginationResult<Show>> {
+        intent {
+            reduce {
+                state.copy(recommendedShowsState = state.recommendedShowsState?.copy(isLoading = true))
+            }
+        }
+        return getRecommendedShowsUseCase.execute(cursor, genre = selectedGenre)
+    }
+
+    private suspend fun loadNewRecommendedShows(): Result<PaginationResult<Show>> {
+        intent {
+            reduce {
+                state.copy(
+                    recommendedShowsState = RecommendedShowsState(shows = emptyList(), isLoading = true)
+                )
+            }
+        }
+        return getRecommendedShowsUseCase.execute(null, genre = selectedGenre)
+    }
+
+    fun loadNextShows() {
         viewModelScope.launch {
             paginator.loadNext()
         }

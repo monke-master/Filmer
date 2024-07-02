@@ -34,7 +34,6 @@ import ru.monke.filmer.ui.action
 import ru.monke.filmer.ui.comedy
 import ru.monke.filmer.ui.common.LoadingPlaceholder
 import ru.monke.filmer.ui.common.SearchField
-import ru.monke.filmer.ui.common.ShowItem
 import ru.monke.filmer.ui.common.ShowsList
 import ru.monke.filmer.ui.common.UpdatableShowItem
 import ru.monke.filmer.ui.common.repeat
@@ -60,19 +59,15 @@ fun SearchScreen(
             LoadingPlaceholder(text = stringResource(id = R.string.loading_shows))
         } else if (state.error != null) {
             Text(text = "Лошара")
-        }
-        else {
-            state.searchData?.let { data ->
-                SearchScreenContent(
-                    genres = data.genres,
-                    todayShow = data.todayShow,
-                    recommendedShows = data.recommendedShows,
-                    onShowItemClicked = onShowItemClicked,
-                    onGenreSelected = searchViewModel::fetchDataByGenre,
-                    isUpdatingData = state.isUpdatingData,
-                    onShowLoad = searchViewModel::loadShows
-                )
-            }
+        } else if (state.isSuccess){
+            SearchScreenContent(
+                genres = state.genres,
+                todayShowState = state.todayShowState!!,
+                recommendedShowsState = state.recommendedShowsState!!,
+                onShowItemClicked = onShowItemClicked,
+                onGenreSelected = searchViewModel::fetchDataByGenre,
+                onShowLoad = searchViewModel::loadNextShows
+            )
         }
     }
 }
@@ -80,11 +75,10 @@ fun SearchScreen(
 @Composable
 private fun SearchScreenContent(
     genres: List<Genre>,
-    todayShow: Show,
-    recommendedShows: List<Show>,
+    todayShowState: TodayShowState,
+    recommendedShowsState: RecommendedShowsState,
     onShowItemClicked: (Show) -> Unit,
     onGenreSelected: (Genre) -> Unit,
-    isUpdatingData: Boolean = false,
     onShowLoad: () -> Unit
 ) {
     Column(
@@ -114,11 +108,11 @@ private fun SearchScreenContent(
             modifier = Modifier
                 .padding(top = 8.dp)
                 .fillMaxWidth(),
-            show = todayShow,
+            show = todayShowState.todayShow,
             onItemClicked = onShowItemClicked,
-            isUpdating = isUpdatingData)
+            isUpdating = todayShowState.isLoading)
         ShowsList(
-            shows = recommendedShows,
+            shows = recommendedShowsState.shows,
             title = stringResource(id = R.string.recommended_for_you),
             onItemClicked = onShowItemClicked,
             onShowLoad = onShowLoad)
@@ -210,8 +204,8 @@ private fun SearchScreenPreview() {
         ) {
             SearchScreenContent(
                 genres = listOf(action, comedy),
-                getMocked(LocalContext.current.resources),
-                listOf(getMocked(LocalContext.current.resources)).repeat(4),
+                TodayShowState(getMocked(LocalContext.current.resources)),
+                RecommendedShowsState(listOf(getMocked(LocalContext.current.resources)).repeat(4)),
                 {},
                 {},
                 onShowLoad = {}
