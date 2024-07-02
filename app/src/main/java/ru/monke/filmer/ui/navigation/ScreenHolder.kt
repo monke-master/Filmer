@@ -65,7 +65,10 @@ fun ScreenHolder(
                 }
                 SearchScreen(
                     searchViewModel = viewModel,
-                    onShowItemClicked = onShowClicked
+                    onShowItemClicked = onShowClicked,
+                    toShowsListNav = { genre ->
+                        navController.navigate("showsList/${genre.id}")
+                    }
                 )
             }
             composable(
@@ -92,6 +95,20 @@ fun ScreenHolder(
                 ShowsListScreen(
                     showsListViewModel = viewModel,
                     title = stringResource(id = R.string.most_popular),
+                    onShowItemClicked = onShowClicked
+                )
+            }
+            composable(
+                route = "showsList/{genreId}",
+                arguments = listOf(navArgument("genreId") { type = NavType.StringType })
+            ) { navBackStack ->
+                val genreId = navBackStack.arguments?.getString("genreId")!!
+                val viewModel = daggerViewModel {
+                    applicationComponent.recommendedShowViewModelFactory().create(ShowsListViewModel::class.java, genreId)
+                }
+                ShowsListScreen(
+                    showsListViewModel = viewModel,
+                    title = stringResource(id = R.string.recommended_for_you),
                     onShowItemClicked = onShowClicked
                 )
             }

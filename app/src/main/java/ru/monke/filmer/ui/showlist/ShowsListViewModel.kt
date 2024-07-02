@@ -26,7 +26,7 @@ class ShowsListViewModel(
         },
         onSuccess = { items ->
             intent {
-                reduce { state.copy(isLoadingNext = false, items = items) }
+                reduce { state.copy(isLoadingNext = false, items = state.items + items) }
             }
         }
     )

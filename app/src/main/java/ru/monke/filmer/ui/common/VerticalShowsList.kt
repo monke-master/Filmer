@@ -26,7 +26,7 @@ fun VerticalShowsList(
         modifier = modifier
     ) {
         items(shows.size) { index ->
-            if (index == shows.size - 1 && !isLoading) {
+            if (index >= shows.size - 1 && !isLoading) {
                 onLoadShow()
             }
             ShowItem(

@@ -1,18 +1,25 @@
 package ru.monke.filmer.data.pagination
 
+import dagger.assisted.Assisted
+import dagger.assisted.AssistedFactory
+import dagger.assisted.AssistedInject
 import ru.monke.filmer.data.shows.PaginationResult
 import ru.monke.filmer.domain.Genre
 import ru.monke.filmer.domain.GetRecommendedShowsUseCase
 import ru.monke.filmer.domain.Show
-import javax.inject.Inject
 
-class RecommendedShowsLoader (
+class RecommendedShowsLoader @AssistedInject constructor (
     private val getRecommendedShowsUseCase: GetRecommendedShowsUseCase,
-    private val genre: Genre
+    @Assisted private val genreId: String
 ): PaginationLoader {
 
     override suspend fun loadNext(cursor: String?): Result<PaginationResult<Show>> {
-        return getRecommendedShowsUseCase.execute(nextCursor = cursor, genre = genre)
+        return getRecommendedShowsUseCase.execute(nextCursor = cursor, genre = Genre(id=genreId, name = "Not specified"))
+    }
+
+    @AssistedFactory
+    interface Factory {
+        fun create(genreId: String): RecommendedShowsLoader
     }
 
 }

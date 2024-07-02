@@ -31,8 +31,6 @@ class SearchViewModel(
 
     override val container = container<SearchState, SearchSideEffect>(SearchState())
 
-    private var selectedGenre = ALL_GENRE
-
     private val paginator: Paginator<Show> = DefaultPaginator(
         onLoadItems = this::loadRecommendedShows,
         onError = {
@@ -88,7 +86,7 @@ class SearchViewModel(
 
     fun fetchDataByGenre(genre: Genre) {
         intent {
-            selectedGenre = genre
+            reduce { state.copy(selectedGenre = genre) }
             val todayShowDef = viewModelScope.async { loadTodayShow() }
             val recommendedShowsDef = viewModelScope.async { loadNewRecommendedShows() }
 
@@ -118,7 +116,7 @@ class SearchViewModel(
                 state.copy(todayShowState = state.todayShowState?.copy(isLoading = true))
             }
         }
-        return getTodayShowUseCase.execute(selectedGenre)
+        return getTodayShowUseCase.execute(container.stateFlow.value.selectedGenre)
     }
 
     private suspend fun loadRecommendedShows(cursor: String? = null): Result<PaginationResult<Show>> {
@@ -127,7 +125,7 @@ class SearchViewModel(
                 state.copy(recommendedShowsState = state.recommendedShowsState?.copy(isLoading = true))
             }
         }
-        return getRecommendedShowsUseCase.execute(cursor, genre = selectedGenre)
+        return getRecommendedShowsUseCase.execute(cursor, genre = container.stateFlow.value.selectedGenre)
     }
 
     private suspend fun loadNewRecommendedShows(): Result<PaginationResult<Show>> {
@@ -138,7 +136,7 @@ class SearchViewModel(
                 )
             }
         }
-        return getRecommendedShowsUseCase.execute(null, genre = selectedGenre)
+        return getRecommendedShowsUseCase.execute(null, genre = container.stateFlow.value.selectedGenre)
     }
 
     fun loadNextShows() {

@@ -31,7 +31,8 @@ fun UpdatableShowsList(
     title: String,
     onItemClicked: (Show) -> Unit = {},
     onShowLoad: () -> Unit = {},
-    isUpdating: Boolean
+    isUpdating: Boolean,
+    onSeeAllBtnClicked: () -> Unit
 ) {
     Row(
         modifier = modifier
@@ -46,7 +47,8 @@ fun UpdatableShowsList(
         Text(
             text = stringResource(id = R.string.see_all),
             style = MaterialTheme.typography.headlineMedium,
-            color = BlueAccent
+            color = BlueAccent,
+            modifier = Modifier.clickable { onSeeAllBtnClicked() }
         )
     }
 
@@ -103,7 +105,11 @@ private fun EmptyLoadingListPreview() {
             color = MaterialTheme.colorScheme.background,
             modifier = Modifier.fillMaxSize()
         ) {
-            UpdatableShowsList(shows = emptyList(), title = "This is Preview", isUpdating = true)
+            UpdatableShowsList(
+                shows = emptyList(),
+                title = "This is Preview",
+                isUpdating = true,
+                onSeeAllBtnClicked = {})
         }
     }
 }

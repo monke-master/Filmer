@@ -28,6 +28,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.orbitmvi.orbit.compose.collectAsState
 import ru.monke.filmer.R
+import ru.monke.filmer.domain.ALL_GENRE
 import ru.monke.filmer.domain.Genre
 import ru.monke.filmer.domain.Show
 import ru.monke.filmer.ui.action
@@ -44,7 +45,8 @@ import ru.monke.filmer.ui.theme.FilmerTheme
 @Composable
 fun SearchScreen(
     searchViewModel: SearchViewModel,
-    onShowItemClicked: (Show) -> Unit = {}
+    onShowItemClicked: (Show) -> Unit = {},
+    toShowsListNav: (Genre) -> Unit
 ) {
     LaunchedEffect(key1 = searchViewModel) {
         searchViewModel.fetchData()
@@ -67,7 +69,9 @@ fun SearchScreen(
                 recommendedShowsState = state.recommendedShowsState!!,
                 onShowItemClicked = onShowItemClicked,
                 onGenreSelected = searchViewModel::fetchDataByGenre,
-                onShowLoad = searchViewModel::loadNextShows
+                onShowLoad = searchViewModel::loadNextShows,
+                toShowsListNav = toShowsListNav,
+                selectedGenre = state.selectedGenre
             )
         }
     }
@@ -80,7 +84,9 @@ private fun SearchScreenContent(
     recommendedShowsState: RecommendedShowsState,
     onShowItemClicked: (Show) -> Unit,
     onGenreSelected: (Genre) -> Unit,
-    onShowLoad: () -> Unit
+    onShowLoad: () -> Unit,
+    toShowsListNav: (Genre) -> Unit,
+    selectedGenre: Genre
 ) {
     Column(
         modifier = Modifier
@@ -117,7 +123,10 @@ private fun SearchScreenContent(
             title = stringResource(id = R.string.recommended_for_you),
             onItemClicked = onShowItemClicked,
             onShowLoad = onShowLoad,
-            isUpdating = recommendedShowsState.isLoading)
+            isUpdating = recommendedShowsState.isLoading,
+            onSeeAllBtnClicked = {
+                toShowsListNav(selectedGenre)
+            })
     }
 }
 
@@ -207,7 +216,9 @@ private fun SearchScreenPreview() {
                 RecommendedShowsState(listOf(getMocked(LocalContext.current.resources)).repeat(4)),
                 {},
                 {},
-                onShowLoad = {}
+                onShowLoad = {},
+                selectedGenre = ALL_GENRE,
+                toShowsListNav = {}
             )
         }
     }

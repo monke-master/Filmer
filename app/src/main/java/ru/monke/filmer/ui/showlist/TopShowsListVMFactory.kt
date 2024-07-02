@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModelProvider
 import ru.monke.filmer.data.pagination.TopShowsLoader
 import javax.inject.Inject
 
-class TopShowsViewModelFactory @Inject constructor(
+class TopShowsListVMFactory @Inject constructor(
     private val topShowsLoader: TopShowsLoader
 ): ViewModelProvider.Factory {
 

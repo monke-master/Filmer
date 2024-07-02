@@ -1,13 +1,13 @@
 package ru.monke.filmer.di
 
 import android.content.Context
-import dagger.Binds
 import dagger.BindsInstance
 import dagger.Component
 import ru.monke.filmer.ui.home.HomeViewModel
 import ru.monke.filmer.ui.search.SearchViewModel
 import ru.monke.filmer.ui.show.ShowViewModel
-import ru.monke.filmer.ui.showlist.TopShowsViewModelFactory
+import ru.monke.filmer.ui.showlist.RecommendedShowsListVMFactory
+import ru.monke.filmer.ui.showlist.TopShowsListVMFactory
 import javax.inject.Singleton
 
 @Component(
@@ -26,7 +26,9 @@ interface ApplicationComponent {
 
     fun searchViewModelFactory(): SearchViewModel.Factory
 
-    fun topShowsViewModelFactory(): TopShowsViewModelFactory
+    fun topShowsViewModelFactory(): TopShowsListVMFactory
+
+    fun recommendedShowViewModelFactory(): RecommendedShowsListVMFactory
 
     @Component.Builder
     interface Builder {
