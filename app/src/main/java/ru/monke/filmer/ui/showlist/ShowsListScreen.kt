@@ -14,11 +14,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import org.orbitmvi.orbit.compose.collectAsState
+import ru.monke.filmer.R
 import ru.monke.filmer.domain.Show
-import ru.monke.filmer.ui.common.BackButton
+import ru.monke.filmer.ui.common.IconButton
 import ru.monke.filmer.ui.common.LoadingPlaceholder
 import ru.monke.filmer.ui.common.VerticalShowsList
 import ru.monke.filmer.ui.common.repeat
@@ -93,8 +95,10 @@ private fun Toolbar(
     Box(
         modifier = modifier,
     ) {
-        BackButton {
-        }
+        IconButton(
+            onClicked = {},
+            painter = painterResource(id = R.drawable.ic_back),
+        )
         Text(
             modifier = Modifier.align(Alignment.Center),
             text = title

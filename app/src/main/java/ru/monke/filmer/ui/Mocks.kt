@@ -6,6 +6,8 @@ import android.net.Uri
 import ru.monke.filmer.R
 import ru.monke.filmer.domain.Genre
 import ru.monke.filmer.domain.Posters
+import ru.monke.filmer.domain.Service
+import ru.monke.filmer.domain.ServiceImages
 import ru.monke.filmer.domain.Show
 import java.util.Calendar
 
@@ -41,3 +43,14 @@ fun getMocked(resources: Resources): Show {
         genres = listOf(action)
     )
 }
+
+val service = Service(
+    id = "1",
+    name = "Netflix",
+    link = "https://www.amazon.com/gp/video/detail/B001GJ19F4/ref=atv_dp",
+    serviceImages = ServiceImages(
+        lightThemeImage = "https://media.movieofthenight.com/services/prime/logo-light-theme.svg",
+        darkThemeImage = "https://media.movieofthenight.com/services/prime/logo-dark-theme.svg",
+        whiteImage = "https://media.movieofthenight.com/services/prime/logo-white.svg"
+    )
+)

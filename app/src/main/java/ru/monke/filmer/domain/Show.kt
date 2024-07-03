@@ -8,5 +8,6 @@ data class Show(
     val duration: Int?,
     val posters: Posters,
     val overview: String,
-    val genres: List<Genre>
+    val genres: List<Genre>,
+    val services: List<Service> = emptyList()
 )

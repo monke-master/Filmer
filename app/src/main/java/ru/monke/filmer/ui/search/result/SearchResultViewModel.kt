@@ -49,7 +49,6 @@ class SearchResultViewModel(
         }
     }
 
-
     class Factory @Inject constructor(
         private val searchUseCase: SearchUseCase
     ): ViewModelProvider.Factory {
@@ -58,6 +57,4 @@ class SearchResultViewModel(
             return SearchResultViewModel(searchUseCase) as T
         }
     }
-
-
 }
