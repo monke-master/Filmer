@@ -178,7 +178,7 @@ fun CarouselItem(
     Box(
         modifier = modifier.clickable { onShowItemClicked(show) }
     ) {
-        ShimmerPoster(show = show, modifier = modifier)
+        ShimmerPoster(poster = show.posters.horizontalPoster, modifier = modifier)
         Text(
             text = show.title,
             modifier = Modifier

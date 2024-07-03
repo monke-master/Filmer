@@ -124,7 +124,7 @@ private fun ShowPoster(
 ) {
     Box() {
         ShimmerPoster(
-            show = show,
+            poster = show.posters.verticalPoster,
             modifier = Modifier
                 .width(135.dp)
                 .height(178.dp)

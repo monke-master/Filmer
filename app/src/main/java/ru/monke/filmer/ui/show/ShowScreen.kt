@@ -127,7 +127,7 @@ private fun ShowScreenContent(
                     onBackButtonClicked = onBackButtonClicked
                 )
                 ShimmerPoster(
-                    show = show,
+                    poster = show.posters.verticalPoster,
                     modifier = Modifier
                         .padding(top = 24.dp)
                         .height(287.dp)
@@ -198,7 +198,7 @@ private fun BackgroundPoster(
     show: Show,
 ) {
     ShimmerPoster(
-        show = show,
+        poster = show.posters.verticalPoster,
         modifier = Modifier
             .fillMaxWidth()
             .height(520.dp)

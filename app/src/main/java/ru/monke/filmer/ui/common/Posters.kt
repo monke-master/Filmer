@@ -12,19 +12,19 @@ import ru.monke.filmer.domain.Show
 @Composable
 fun ShimmerPoster(
     modifier: Modifier = Modifier,
-    show: Show
+    poster: String?
 ) {
     SubcomposeAsyncImage(
         modifier = modifier,
         model = ImageRequest.Builder(LocalContext.current)
-            .data(show.posters.horizontalPoster)
+            .data(poster)
             .decoderFactory(SvgDecoder.Factory())
             .crossfade(true)
             .build(),
         loading = {
             ShimmerPlaceholder(modifier = modifier)
         },
-        contentDescription = show.title,
+        contentDescription = null,
         contentScale = ContentScale.Crop
     )
 }
