@@ -5,11 +5,15 @@ import ru.monke.filmer.data.shows.GenreRemote
 import ru.monke.filmer.data.shows.Image
 import ru.monke.filmer.data.shows.ImageSet
 import ru.monke.filmer.data.shows.PaginationResult
+import ru.monke.filmer.data.shows.ServiceImageSetRemote
 import ru.monke.filmer.data.shows.ShowRemote
 import ru.monke.filmer.data.shows.ShowRequest
 import ru.monke.filmer.data.shows.ShowResponse
+import ru.monke.filmer.data.shows.StreamingOption
 import ru.monke.filmer.domain.Genre
 import ru.monke.filmer.domain.Posters
+import ru.monke.filmer.domain.Service
+import ru.monke.filmer.domain.ServiceImages
 import ru.monke.filmer.domain.Show
 
 fun ShowRemote.toDomain(): Show {
@@ -21,8 +25,15 @@ fun ShowRemote.toDomain(): Show {
         rating = rating,
         year = getYear(),
         posters = imageSet.toPosters(),
-        genres = genres.map { it.toDomain() }
+        genres = genres.map { it.toDomain() },
+        services = getServices()
     )
+}
+
+fun ShowRemote.getServices(): List<Service> {
+    if (streamingOptions.size == 0) return emptyList()
+    val key = streamingOptions.keys.toList()[0]
+    return streamingOptions[key]?.map { it.toDomain() }?.distinct() ?: emptyList()
 }
 
 fun ShowRemote.getYear(): Int {
@@ -79,4 +90,17 @@ fun ShowRequest.toRoomEntity() = RequestEntity(
 fun ShowResponse.toPaginationResult() = PaginationResult(
     items = shows.map { it.toDomain() },
     nextKey = if (hasMore == true) nextCursor else null
+)
+
+fun StreamingOption.toDomain() = Service(
+    id = service.id,
+    name = service.name,
+    serviceImages = service.imageSet.toDomain(),
+    link = link
+)
+
+fun ServiceImageSetRemote.toDomain() = ServiceImages(
+    lightThemeImage = lightThemeImage,
+    darkThemeImage = darkThemeImage,
+    whiteImage = whiteImage
 )

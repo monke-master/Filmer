@@ -14,6 +14,7 @@
     <string name="loading_shows">Getting cool shows for you…</string>
     <string name="cancel">Cancel</string>
     <string name="watch">Watch</string>
+    <string name="play">Play</string>
 
     <plurals name="minute">
         <item quantity="one">%s minute</item>

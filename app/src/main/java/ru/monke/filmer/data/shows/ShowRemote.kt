@@ -13,5 +13,6 @@ data class ShowRemote(
     val overview: String,
     val runtime: Int? = null,
     val imageSet: ImageSet,
-    val genres: List<GenreRemote>
+    val genres: List<GenreRemote>,
+    val streamingOptions: HashMap<String, List<StreamingOption>>
 )

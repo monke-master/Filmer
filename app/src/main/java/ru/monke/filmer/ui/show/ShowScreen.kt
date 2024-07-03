@@ -1,5 +1,6 @@
 package ru.monke.filmer.ui.show
 
+import android.widget.Button
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -15,6 +16,9 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonColors
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -22,7 +26,11 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
@@ -64,6 +72,7 @@ fun ShowScreen(
     }
 
     val state by viewModel.collectAsState()
+
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background,
@@ -73,9 +82,9 @@ fun ShowScreen(
         } else if (state.error != null) {
             Text(text = state.error?.localizedMessage ?: " ")
         } else {
-            state.show?.let {
+            state.show?.let { show ->
                 ShowScreenContent(
-                    show = it,
+                    show = show,
                     onBackButtonClicked = onBackButtonClicked
                 )
             }
@@ -87,8 +96,20 @@ fun ShowScreen(
 @Composable
 private fun ShowScreenContent(
     show: Show,
-    onBackButtonClicked: () -> Unit
+    onBackButtonClicked: () -> Unit,
 ) {
+    var showDialog by remember {
+        mutableStateOf(false)
+    }
+
+    if (showDialog) {
+        ServicesDialog(
+            services = show.services,
+            onDismiss = {
+                showDialog = false
+            }
+        )
+    }
     Column(
         modifier = Modifier.verticalScroll(rememberScrollState())
     ) {
@@ -118,7 +139,12 @@ private fun ShowScreenContent(
                 RatingBadge(
                     rating = show.rating.getRating(),
                     modifier = Modifier.padding(top = 16.dp))
-
+                PlayButton(
+                    modifier = Modifier.padding(top = 24.dp),
+                    onBtnClicked = {
+                        showDialog = true
+                    }
+                )
             }
         }
         ShowOverview(
@@ -175,7 +201,7 @@ private fun BackgroundPoster(
         show = show,
         modifier = Modifier
             .fillMaxWidth()
-            .height(450.dp)
+            .height(520.dp)
             .alpha(0.2f)
             .drawWithCache {
                 val startColor = Color(0x2E1F1D2B)
@@ -241,6 +267,24 @@ private fun ShowDescription(
     }
 }
 
+
+@Composable
+private fun PlayButton(
+    modifier: Modifier = Modifier,
+    onBtnClicked: () -> Unit
+) {
+    Button(
+        modifier = modifier,
+        onClick = onBtnClicked,
+        colors = ButtonDefaults.buttonColors(containerColor = MaterialTheme.colorScheme.secondary)
+    ) {
+        Icon(
+            painter = painterResource(id = R.drawable.ic_play),
+            contentDescription = null)
+        Text(text = stringResource(id = R.string.play))
+    }
+}
+
 @Composable
 private fun ShowOverview(
     modifier: Modifier = Modifier,
@@ -272,7 +316,7 @@ fun ShowScreenPreview() {
         ) {
             ShowScreenContent(
                 show = getMocked(LocalContext.current.resources),
-                onBackButtonClicked = {}
+                onBackButtonClicked = {},
             )
         }
     }

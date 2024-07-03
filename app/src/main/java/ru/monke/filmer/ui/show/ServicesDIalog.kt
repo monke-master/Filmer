@@ -44,10 +44,11 @@ import ru.monke.filmer.ui.theme.White
 
 @Composable
 fun ServicesDialog(
-    services: List<Service>
+    services: List<Service>,
+    onDismiss: () -> Unit
 ) {
-    Dialog(onDismissRequest = { /*TODO*/ }) {
-
+    Dialog(onDismissRequest = onDismiss) {
+        ServicesDialogContent(services = services)
     }
 }
 
@@ -83,9 +84,8 @@ fun ServicesDialogContent(
             )
             LazyRow(
                 modifier = Modifier
-                    .fillMaxWidth()
                     .padding(horizontal = 16.dp, vertical = 32.dp),
-                horizontalArrangement = Arrangement.SpaceBetween
+                horizontalArrangement = Arrangement.spacedBy(32.dp)
             ) {
                 items(services) {
                     ServiceItem(service = it)
@@ -105,7 +105,8 @@ private fun ServiceItem(service: Service) {
             val intent = Intent(Intent.ACTION_VIEW)
             intent.setData(Uri.parse(service.link))
             startActivity(context, intent, null)
-        }
+        },
+        horizontalAlignment = Alignment.CenterHorizontally
     ) {
         ShimmerServiceImage(service = service)
         Text(
@@ -143,6 +144,6 @@ fun ServicesDialogPreview() {
     FilmerTheme {
         ServicesDialogContent(listOf(
             service
-        ).repeat(4))
+        ).repeat(3))
     }
 }
