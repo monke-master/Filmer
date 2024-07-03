@@ -135,10 +135,11 @@ private fun SearchTextField(
                     tint = White
                 )
             }
+        },
+        onValueChanged = {
+            text = it
         }
-    ) {
-        text = it
-    }
+    )
 }
 
 

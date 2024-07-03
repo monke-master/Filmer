@@ -12,7 +12,6 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
 import ru.monke.filmer.R
-import ru.monke.filmer.data.pagination.TopShowsLoader
 import ru.monke.filmer.di.ApplicationComponent
 import ru.monke.filmer.di.DaggerApplicationComponent
 import ru.monke.filmer.di.daggerViewModel
@@ -22,6 +21,8 @@ import ru.monke.filmer.ui.home.HomeScreen
 import ru.monke.filmer.ui.home.HomeViewModel
 import ru.monke.filmer.ui.search.SearchScreen
 import ru.monke.filmer.ui.search.SearchViewModel
+import ru.monke.filmer.ui.search.result.SearchResultScreen
+import ru.monke.filmer.ui.search.result.SearchResultViewModel
 import ru.monke.filmer.ui.show.ShowScreen
 import ru.monke.filmer.ui.show.ShowViewModel
 import ru.monke.filmer.ui.showlist.ShowsListScreen
@@ -69,6 +70,9 @@ fun ScreenHolder(
                     onShowItemClicked = onShowClicked,
                     toShowsListNav = { genre ->
                         navController.navigate("showsList/${genre.id}&${genre.name}")
+                    },
+                    onSearchFieldClicked = {
+                        navController.navigate("search/searchResult")
                     }
                 )
             }
@@ -116,6 +120,17 @@ fun ScreenHolder(
                     showsListViewModel = viewModel,
                     title = stringResource(id = R.string.recommended_for_you),
                     onShowItemClicked = onShowClicked
+                )
+            }
+            composable("search/searchResult") {
+                val viewModel = daggerViewModel {
+                    applicationComponent.searchResultViewModel().create(SearchResultViewModel::class.java)
+                }
+
+                SearchResultScreen(
+                    viewModel = viewModel,
+                    onCancelBtnClicked = { navController.popBackStack() },
+                    onShowClicked = onShowClicked
                 )
             }
         }

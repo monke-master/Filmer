@@ -25,4 +25,10 @@ interface ShowRemoteDataSource {
     ): Result<ShowResponse>
 
     suspend fun getGenres(): Result<List<GenreRemote>>
+
+    suspend fun searchShows(
+        country: String,
+        title: String,
+        filters: HashMap<String, Any>
+    ): Result<List<ShowRemote>>
 }

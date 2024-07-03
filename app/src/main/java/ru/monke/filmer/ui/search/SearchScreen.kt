@@ -1,7 +1,9 @@
 package ru.monke.filmer.ui.search
 
+import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -41,12 +43,14 @@ import ru.monke.filmer.ui.common.UpdatableShowsList
 import ru.monke.filmer.ui.common.repeat
 import ru.monke.filmer.ui.getMocked
 import ru.monke.filmer.ui.theme.FilmerTheme
+import kotlin.math.log
 
 @Composable
 fun SearchScreen(
     searchViewModel: SearchViewModel,
     onShowItemClicked: (Show) -> Unit = {},
-    toShowsListNav: (Genre) -> Unit
+    toShowsListNav: (Genre) -> Unit,
+    onSearchFieldClicked: () -> Unit
 ) {
     LaunchedEffect(key1 = searchViewModel) {
         searchViewModel.fetchData()
@@ -71,7 +75,8 @@ fun SearchScreen(
                 onGenreSelected = searchViewModel::fetchDataByGenre,
                 onShowLoad = searchViewModel::loadNextShows,
                 toShowsListNav = toShowsListNav,
-                selectedGenre = state.selectedGenre
+                selectedGenre = state.selectedGenre,
+                onSearchFieldClicked = onSearchFieldClicked
             )
         }
     }
@@ -86,7 +91,8 @@ private fun SearchScreenContent(
     onGenreSelected: (Genre) -> Unit,
     onShowLoad: () -> Unit,
     toShowsListNav: (Genre) -> Unit,
-    selectedGenre: Genre
+    selectedGenre: Genre,
+    onSearchFieldClicked: () -> Unit
 ) {
     Column(
         modifier = Modifier
@@ -100,6 +106,10 @@ private fun SearchScreenContent(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(top = 16.dp)
+                .clickable {
+                    Log.d("ALAKKA", "SearchScreenContent: ")
+                    onSearchFieldClicked()
+                },
         )
         GenresChipGroup(
             genres = genres,
@@ -191,16 +201,19 @@ fun SelectedCategoryChip(
 
 @Composable
 fun SearchTextField(
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
 ) {
     var text by remember { mutableStateOf("") }
     SearchField(
         modifier = modifier,
         value = text,
         placeholder = { Text(text = stringResource(id = R.string.search_hint)) },
-    ) {
-        text = it
-    }
+        onValueChanged = {
+            text = it
+        },
+        enabled = false
+    )
+
 }
 
 @Preview
@@ -218,7 +231,8 @@ private fun SearchScreenPreview() {
                 {},
                 onShowLoad = {},
                 selectedGenre = ALL_GENRE,
-                toShowsListNav = {}
+                toShowsListNav = {},
+                onSearchFieldClicked = {}
             )
         }
     }

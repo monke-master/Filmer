@@ -124,4 +124,21 @@ class ShowRepositoryImpl @Inject constructor(
         }
     }
 
+    override suspend fun searchShows(
+        country: String?,
+        title: String,
+        filters: HashMap<String, Any>
+    ): Result<List<Show>> {
+        return withContext(Dispatchers.IO) {
+            val shows = showRemoteDataSource.searchShows(
+                country = country ?: DEFAULT_COUNTRY_VALUE,
+                title = title,
+                filters = filters
+            ).getOrElse {
+                return@withContext Result.failure(it)
+            }
+            return@withContext Result.success(shows.map { it.toDomain() })
+        }
+    }
+
 }

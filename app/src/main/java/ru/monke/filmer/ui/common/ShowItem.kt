@@ -135,7 +135,7 @@ private fun ShowPoster(
             modifier = Modifier
                 .align(Alignment.TopStart)
                 .padding(8.dp),
-            rating = show.rating.toString()
+            rating = show.rating.getRating()
         )
     }
 }

@@ -25,4 +25,10 @@ interface ShowRepository {
         nextCursor: String?,
         filters: HashMap<String, Any>
     ): Result<PaginationResult<Show>>
+
+    suspend fun searchShows(
+        country: String? = null,
+        title: String,
+        filters: HashMap<String, Any> = hashMapOf()
+    ): Result<List<Show>>
 }

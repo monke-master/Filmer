@@ -23,11 +23,15 @@ fun InputFieldColors(): TextFieldColors {
     return TextFieldDefaults.colors(
         focusedContainerColor = SoftBlue,
         unfocusedContainerColor = SoftBlue,
+        disabledContainerColor = SoftBlue,
         focusedIndicatorColor = Color.Transparent,
         unfocusedIndicatorColor = Color.Transparent,
+        disabledIndicatorColor = Color.Transparent,
         focusedTextColor = White,
+        disabledTextColor = White,
         focusedPlaceholderColor = Grey,
         unfocusedPlaceholderColor = Grey,
+        disabledPlaceholderColor = Grey
     )
 }
 
@@ -38,6 +42,7 @@ fun SearchField(
     placeholder: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
     onValueChanged: (String) -> Unit,
+    enabled: Boolean = true
 ) {
     TextField(
         modifier = modifier,
@@ -55,5 +60,6 @@ fun SearchField(
         maxLines = 1,
         placeholder = placeholder,
         onValueChange = onValueChanged,
+        enabled = enabled
     )
 }

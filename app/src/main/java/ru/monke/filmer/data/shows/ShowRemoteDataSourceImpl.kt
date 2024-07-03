@@ -4,6 +4,7 @@ import io.ktor.client.HttpClient
 import io.ktor.client.call.body
 import io.ktor.client.request.get
 import ru.monke.filmer.di.ClassProvider
+import ru.monke.filmer.domain.Show
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -89,6 +90,25 @@ class ShowRemoteDataSourceImpl @Inject constructor(
         return try {
             val request = GetGenresRequestBuilder().build()
             val data: List<GenreRemote> = ktor.get(request).body()
+            Result.success(data)
+        } catch (e: Exception) {
+            e.printStackTrace()
+            Result.failure(e)
+        }
+    }
+
+    override suspend fun searchShows(
+        country: String,
+        title: String,
+        filters: HashMap<String, Any>
+    ): Result<List<ShowRemote>> {
+        return try {
+            val request = SearchShowsRequestBuilder().build(
+                country = country,
+                query = title,
+                filters = filters
+            )
+            val data: List<ShowRemote> = ktor.get(request).body()
             Result.success(data)
         } catch (e: Exception) {
             e.printStackTrace()

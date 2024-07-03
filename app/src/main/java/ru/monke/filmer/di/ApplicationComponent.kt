@@ -5,6 +5,7 @@ import dagger.BindsInstance
 import dagger.Component
 import ru.monke.filmer.ui.home.HomeViewModel
 import ru.monke.filmer.ui.search.SearchViewModel
+import ru.monke.filmer.ui.search.result.SearchResultViewModel
 import ru.monke.filmer.ui.show.ShowViewModel
 import ru.monke.filmer.ui.showlist.RecommendedShowsListVMFactory
 import ru.monke.filmer.ui.showlist.TopShowsListVMFactory
@@ -29,6 +30,8 @@ interface ApplicationComponent {
     fun topShowsViewModelFactory(): TopShowsListVMFactory
 
     fun recommendedShowViewModelFactory(): RecommendedShowsListVMFactory
+
+    fun searchResultViewModel(): SearchResultViewModel.Factory
 
     @Component.Builder
     interface Builder {
