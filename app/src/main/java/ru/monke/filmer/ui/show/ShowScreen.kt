@@ -27,6 +27,7 @@ import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -42,6 +43,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.lifecycle.findViewTreeLifecycleOwner
 import org.orbitmvi.orbit.compose.collectAsState
 import ru.monke.filmer.R
 import ru.monke.filmer.domain.Show
@@ -59,13 +61,8 @@ import ru.monke.filmer.ui.theme.SoftBlue
 @Composable
 fun ShowScreen(
     viewModel: ShowViewModel,
-    showId: String,
     onBackButtonClicked: () -> Unit
 ) {
-    LaunchedEffect(key1 = showId) {
-        viewModel.getShow(showId)
-    }
-
     val state by viewModel.collectAsState()
 
     Surface(

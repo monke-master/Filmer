@@ -1,5 +1,6 @@
 package ru.monke.filmer.ui.search
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -29,6 +30,10 @@ class SearchViewModel(
 ): ViewModel(), ContainerHost<SearchState, SearchSideEffect> {
 
     override val container = container<SearchState, SearchSideEffect>(SearchState())
+
+    init {
+        fetchData()
+    }
 
     private val paginator: Paginator<Show> = DefaultPaginator(
         onLoadItems = this::loadRecommendedShows,
@@ -142,6 +147,11 @@ class SearchViewModel(
         viewModelScope.launch {
             paginator.loadNext()
         }
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        Log.d(TAG, "лекарь и злодей")
     }
 
     class Factory @Inject constructor(

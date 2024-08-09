@@ -16,7 +16,7 @@ fun<T> List<T>.repeat(n: Int): List<T> {
 
 
 fun Show.getGenre(): String {
-    if (genres.size > 0) {
+    if (genres.isNotEmpty()) {
         return genres[0].name
     }
     return ""

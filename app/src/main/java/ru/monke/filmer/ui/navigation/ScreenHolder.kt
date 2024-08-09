@@ -1,5 +1,6 @@
 package ru.monke.filmer.ui.navigation
 
+import android.util.Log
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
@@ -80,12 +81,12 @@ fun ScreenHolder(
                 route = "show/{showId}",
                 arguments = listOf(navArgument("showId") { type = NavType.StringType })
             ) { backStackEntry ->
+                val showId = backStackEntry.arguments?.getString(Params.SHOW_ID_PARAM)!!
                 val viewModel = daggerViewModel {
-                    applicationComponent.showViewModelFactory().create(ShowViewModel::class.java)
+                    applicationComponent.showViewModelFactory().create(ShowViewModel::class.java, showId)
                 }
                 ShowScreen(
                     viewModel = viewModel,
-                    showId = backStackEntry.arguments?.getString(Params.SHOW_ID_PARAM)!!,
                     onBackButtonClicked = {
                         navController.popBackStack()
                     }

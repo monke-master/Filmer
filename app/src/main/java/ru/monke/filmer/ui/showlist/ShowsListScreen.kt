@@ -33,10 +33,6 @@ fun ShowsListScreen(
     title: String,
     onShowItemClicked: (Show) -> Unit
 ) {
-    LaunchedEffect(key1 = showsListViewModel) {
-        showsListViewModel.fetchData()
-    }
-
     val state by showsListViewModel.collectAsState()
 
     Surface(

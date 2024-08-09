@@ -52,10 +52,6 @@ fun SearchScreen(
     toShowsListNav: (Genre) -> Unit,
     onSearchFieldClicked: () -> Unit
 ) {
-    LaunchedEffect(key1 = searchViewModel) {
-        searchViewModel.fetchData()
-    }
-    
     val state by searchViewModel.collectAsState()
     
     Surface(

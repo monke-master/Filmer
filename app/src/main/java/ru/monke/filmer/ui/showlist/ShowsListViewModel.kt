@@ -19,6 +19,10 @@ class ShowsListViewModel(
 
     override val container = container<ShowsListState, ShowListSideEffect>(ShowsListState())
 
+    init {
+        fetchData()
+    }
+
     private val paginator: Paginator<Show> = DefaultPaginator(
         onLoadItems = this::loadNextInternal,
         onError = {

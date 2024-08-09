@@ -20,6 +20,10 @@ class HomeViewModel(
 
     override val container = container<HomeState, HomeSideEffect>(HomeState())
 
+    init {
+        fetchData()
+    }
+
     fun fetchData() {
         intent {
             reduce { state.copy(isLoading = true) }

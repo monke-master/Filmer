@@ -12,12 +12,17 @@ import ru.monke.filmer.domain.GetShowByIdUseCase
 import javax.inject.Inject
 
 class ShowViewModel(
-    private val getShowByIdUseCase: GetShowByIdUseCase
+    private val getShowByIdUseCase: GetShowByIdUseCase,
+    private val showId: String
 ): ViewModel(), ContainerHost<ShowState, ShowSideEffect> {
 
     override val container = container<ShowState, ShowSideEffect>(ShowState())
 
-    fun getShow(showId: String) = intent {
+    init {
+        getShow()
+    }
+
+    fun getShow() = intent {
         viewModelScope.launch {
             reduce { state.copy(isLoading = true) }
             val result = getShowByIdUseCase.execute(showId)
@@ -31,8 +36,9 @@ class ShowViewModel(
     class Factory @Inject constructor(
         private val getShowByIdUseCase: GetShowByIdUseCase
     ): ViewModelProvider.Factory {
-        override fun <T : ViewModel> create(modelClass: Class<T>): T {
-            return ShowViewModel(getShowByIdUseCase) as T
+
+        fun <T : ViewModel> create(modelClass: Class<T>, showId: String): T {
+            return ShowViewModel(getShowByIdUseCase, showId) as T
         }
     }
 }
