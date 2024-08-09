@@ -1,15 +1,15 @@
 package ru.monke.filmer.data
 
 import ru.monke.filmer.data.local.RequestEntity
-import ru.monke.filmer.data.shows.GenreRemote
-import ru.monke.filmer.data.shows.Image
-import ru.monke.filmer.data.shows.ImageSet
-import ru.monke.filmer.data.shows.PaginationResult
-import ru.monke.filmer.data.shows.ServiceImageSetRemote
-import ru.monke.filmer.data.shows.ShowRemote
-import ru.monke.filmer.data.shows.ShowRequest
-import ru.monke.filmer.data.shows.ShowResponse
-import ru.monke.filmer.data.shows.StreamingOption
+import ru.monke.filmer.data.shows.models.GenreRemote
+import ru.monke.filmer.data.shows.models.Image
+import ru.monke.filmer.data.shows.models.ImageSet
+import ru.monke.filmer.data.shows.models.PaginationResult
+import ru.monke.filmer.data.shows.models.ServiceImageSetRemote
+import ru.monke.filmer.data.shows.models.ShowRemote
+import ru.monke.filmer.data.shows.models.ShowRequest
+import ru.monke.filmer.data.shows.models.ShowResponse
+import ru.monke.filmer.data.shows.models.StreamingOption
 import ru.monke.filmer.domain.Genre
 import ru.monke.filmer.domain.Posters
 import ru.monke.filmer.domain.Service

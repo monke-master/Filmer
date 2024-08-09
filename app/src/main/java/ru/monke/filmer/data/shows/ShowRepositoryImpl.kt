@@ -3,6 +3,8 @@ package ru.monke.filmer.data.shows
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import ru.monke.filmer.data.local.RequestLocalDataSource
+import ru.monke.filmer.data.shows.models.PaginationResult
+import ru.monke.filmer.data.shows.models.ShowRequest
 import ru.monke.filmer.data.toDomain
 import ru.monke.filmer.data.toPaginationResult
 import ru.monke.filmer.domain.ALL_GENRE

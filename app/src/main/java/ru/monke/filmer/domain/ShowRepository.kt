@@ -1,7 +1,6 @@
 package ru.monke.filmer.domain
 
-import ru.monke.filmer.data.shows.PaginationResult
-import ru.monke.filmer.data.shows.ShowResponse
+import ru.monke.filmer.data.shows.models.PaginationResult
 
 interface ShowRepository {
 

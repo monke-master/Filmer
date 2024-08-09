@@ -1,10 +1,9 @@
-package ru.monke.filmer.data.shows
+package ru.monke.filmer.data.shows.models
 
 import kotlinx.serialization.Serializable
 
 @Serializable
-data class ServiceRemote(
+data class GenreRemote(
     val id: String,
     val name: String,
-    val imageSet: ServiceImageSetRemote
 )

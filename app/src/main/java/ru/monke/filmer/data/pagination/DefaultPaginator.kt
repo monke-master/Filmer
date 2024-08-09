@@ -1,6 +1,6 @@
 package ru.monke.filmer.data.pagination
 
-import ru.monke.filmer.data.shows.PaginationResult
+import ru.monke.filmer.data.shows.models.PaginationResult
 import javax.inject.Inject
 
 class DefaultPaginator<Item> @Inject constructor(

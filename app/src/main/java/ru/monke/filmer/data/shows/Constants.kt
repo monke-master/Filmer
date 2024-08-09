@@ -29,3 +29,5 @@ const val KEYWORD_PARAM = "keyword"
 
 const val TITLE_ENDPOINT = "shows/search/title"
 const val TITLE_PARAM = "title"
+
+const val UNAUTHORIZED_CODE = 403

@@ -24,7 +24,6 @@ class KtorProvider @Inject constructor(): ClassProvider<HttpClient> {
         }
         install(DefaultRequest) {
             url(BASE_URl)
-            header(RAPID_API_KEY, API_KEY)
         }
     }
 

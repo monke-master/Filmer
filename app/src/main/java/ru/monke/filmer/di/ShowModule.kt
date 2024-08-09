@@ -4,6 +4,8 @@ import dagger.Binds
 import dagger.Module
 import ru.monke.filmer.data.local.RequestLocalDataSource
 import ru.monke.filmer.data.local.RequestLocalDataSourceImpl
+import ru.monke.filmer.data.shows.ApiKeySetter
+import ru.monke.filmer.data.shows.ApiKeySetterImpl
 import ru.monke.filmer.data.shows.ShowRemoteDataSource
 import ru.monke.filmer.data.shows.ShowRemoteDataSourceImpl
 import ru.monke.filmer.data.shows.ShowRepositoryImpl
@@ -20,5 +22,8 @@ interface ShowModule {
 
     @Binds
     fun bindLocalDataSource(i: RequestLocalDataSourceImpl): RequestLocalDataSource
+
+    @Binds
+    fun bindApiKeySetter(i: ApiKeySetterImpl): ApiKeySetter
 
 }

@@ -1,7 +1,7 @@
 package ru.monke.filmer.domain
 
 import ru.monke.filmer.data.shows.GENRES_PARAM
-import ru.monke.filmer.data.shows.PaginationResult
+import ru.monke.filmer.data.shows.models.PaginationResult
 import ru.monke.filmer.data.shows.MIN_RATING_PARAM
 import javax.inject.Inject
 

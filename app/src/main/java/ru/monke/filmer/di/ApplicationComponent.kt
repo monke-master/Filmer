@@ -3,6 +3,7 @@ package ru.monke.filmer.di
 import android.content.Context
 import dagger.BindsInstance
 import dagger.Component
+import ru.monke.filmer.data.shows.ApiKeySetter
 import ru.monke.filmer.ui.home.HomeViewModel
 import ru.monke.filmer.ui.search.SearchViewModel
 import ru.monke.filmer.ui.search.result.SearchResultViewModel
@@ -32,6 +33,8 @@ interface ApplicationComponent {
     fun recommendedShowViewModelFactory(): RecommendedShowsListVMFactory
 
     fun searchResultViewModel(): SearchResultViewModel.Factory
+
+    fun apiKeySetter(): ApiKeySetter
 
     @Component.Builder
     interface Builder {

@@ -1,7 +1,5 @@
 package ru.monke.filmer.domain
 
-import ru.monke.filmer.data.shows.KEYWORD_PARAM
-import ru.monke.filmer.data.shows.PaginationResult
 import javax.inject.Inject
 
 class SearchUseCase @Inject constructor(

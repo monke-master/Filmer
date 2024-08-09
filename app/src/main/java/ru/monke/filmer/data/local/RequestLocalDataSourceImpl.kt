@@ -1,6 +1,6 @@
 package ru.monke.filmer.data.local
 
-import ru.monke.filmer.data.shows.ShowRequest
+import ru.monke.filmer.data.shows.models.ShowRequest
 import ru.monke.filmer.data.toDomain
 import ru.monke.filmer.data.toRoomEntity
 import ru.monke.filmer.domain.Genre

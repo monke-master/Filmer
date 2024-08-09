@@ -1,6 +1,4 @@
-package ru.monke.filmer.data.shows
-
-import ru.monke.filmer.domain.Show
+package ru.monke.filmer.data.shows.models
 
 data class PaginationResult<Item>(
     val items: List<Item>,

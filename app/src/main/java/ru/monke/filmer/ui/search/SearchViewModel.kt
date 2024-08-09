@@ -1,6 +1,5 @@
 package ru.monke.filmer.ui.search
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.viewModelScope
@@ -12,7 +11,7 @@ import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import ru.monke.filmer.data.pagination.DefaultPaginator
 import ru.monke.filmer.data.pagination.Paginator
-import ru.monke.filmer.data.shows.PaginationResult
+import ru.monke.filmer.data.shows.models.PaginationResult
 import ru.monke.filmer.domain.ALL_GENRE
 import ru.monke.filmer.domain.Genre
 import ru.monke.filmer.domain.GetGenresUseCase

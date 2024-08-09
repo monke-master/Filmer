@@ -10,7 +10,7 @@ import org.orbitmvi.orbit.viewmodel.container
 import ru.monke.filmer.data.pagination.DefaultPaginator
 import ru.monke.filmer.data.pagination.PaginationLoader
 import ru.monke.filmer.data.pagination.Paginator
-import ru.monke.filmer.data.shows.PaginationResult
+import ru.monke.filmer.data.shows.models.PaginationResult
 import ru.monke.filmer.domain.Show
 
 class ShowsListViewModel(

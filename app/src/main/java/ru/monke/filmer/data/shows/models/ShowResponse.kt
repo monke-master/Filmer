@@ -1,4 +1,4 @@
-package ru.monke.filmer.data.shows
+package ru.monke.filmer.data.shows.models
 
 import kotlinx.serialization.Serializable
 

@@ -1,7 +1,8 @@
 package ru.monke.filmer.data.shows
 
-import ru.monke.filmer.domain.Genre
-import ru.monke.filmer.domain.Show
+import ru.monke.filmer.data.shows.models.GenreRemote
+import ru.monke.filmer.data.shows.models.ShowRemote
+import ru.monke.filmer.data.shows.models.ShowResponse
 
 interface ShowRemoteDataSource {
 
