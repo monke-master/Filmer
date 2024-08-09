@@ -2,6 +2,7 @@ package ru.monke.filmer.ui.showlist
 
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -61,7 +62,9 @@ private fun ShowsListScreenContent(
     onItemClicked: (Show) -> Unit,
     onItemsLoad: () -> Unit,
 ) {
-    Column {
+    Column(
+        modifier = Modifier.fillMaxHeight()
+    ) {
         Toolbar(
             modifier = Modifier
                 .fillMaxWidth()
@@ -69,12 +72,14 @@ private fun ShowsListScreenContent(
             title = title
         )
         VerticalShowsList(
-            modifier = Modifier.padding(
-                start = 16.dp,
-                end = 16.dp,
-                top = 8.dp,
-                bottom = 32.dp
-            ),
+            modifier = Modifier
+                .padding(
+                    start = 16.dp,
+                    end = 16.dp,
+                    top = 8.dp,
+                    bottom = 16.dp
+                )
+                .fillMaxHeight(),
             shows = state.items,
             onLoadShow = onItemsLoad,
             onShowClicked = onItemClicked,
