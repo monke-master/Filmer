@@ -128,18 +128,6 @@ fun SearchTextField(
 }
 
 @Composable
-fun SearchResultList(
-    modifier: Modifier = Modifier,
-    results: List<Show>
-) {
-    LazyColumn {
-        items(results) { show ->
-            ShowItem(show = show, onItemClicked =  {})
-        }
-    }
-}
-
-@Composable
 fun NotFoundPlaceholder(
     modifier: Modifier = Modifier
 ) {

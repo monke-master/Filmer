@@ -1,6 +1,5 @@
 package ru.monke.filmer.ui.show
 
-import android.widget.Button
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,7 +16,6 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.Button
-import androidx.compose.material3.ButtonColors
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -26,7 +24,6 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -39,15 +36,12 @@ import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import coil.compose.AsyncImage
-import coil.request.ImageRequest
 import org.orbitmvi.orbit.compose.collectAsState
 import ru.monke.filmer.R
 import ru.monke.filmer.domain.Show
@@ -55,6 +49,7 @@ import ru.monke.filmer.ui.common.DescriptionItem
 import ru.monke.filmer.ui.common.LoadingPlaceholder
 import ru.monke.filmer.ui.common.RatingBadge
 import ru.monke.filmer.ui.common.ShimmerPoster
+import ru.monke.filmer.ui.common.getGenre
 import ru.monke.filmer.ui.common.getRating
 import ru.monke.filmer.ui.common.quantityStringResource
 import ru.monke.filmer.ui.getMocked
@@ -220,24 +215,6 @@ private fun BackgroundPoster(
 }
 
 @Composable
-private fun Poster(
-    modifier: Modifier = Modifier,
-    cover: String?
-) {
-    AsyncImage(
-        modifier = modifier
-            ,
-        model = ImageRequest.Builder(LocalContext.current)
-            .data(cover)
-            .crossfade(true)
-            .placeholder(R.drawable.example_show)
-            .build(),
-        contentDescription = "",
-        contentScale = ContentScale.Crop
-    )
-}
-
-@Composable
 private fun ShowDescription(
     modifier: Modifier = Modifier,
     show: Show
@@ -247,23 +224,27 @@ private fun ShowDescription(
     ) {
         DescriptionItem(
             icon = painterResource(id = R.drawable.ic_calendar),
-            title = show.year.toString())
-        VerticalDivider(
-            modifier = Modifier.padding(horizontal = 12.dp)
+            title = show.year.toString()
         )
         show.duration?.let {
+            VerticalDivider(
+                modifier = Modifier.padding(horizontal = 12.dp)
+            )
             DescriptionItem(
                 icon = painterResource(id = R.drawable.ic_time),
                 title = quantityStringResource(
                     id = R.plurals.minute,
                     quantity = show.duration, show.duration))
+        }
+        if (show.getGenre().isNotEmpty()) {
             VerticalDivider(
                 modifier = Modifier.padding(horizontal = 12.dp)
             )
+            DescriptionItem(
+                icon = painterResource(id = R.drawable.ic_movie),
+                title = show.getGenre()
+            )
         }
-        DescriptionItem(
-            icon = painterResource(id = R.drawable.ic_movie),
-            title = show.genres[0].name)
     }
 }
 
@@ -304,7 +285,6 @@ private fun ShowOverview(
     }
 
 }
-
 
 @Preview
 @Composable
