@@ -23,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavController
+import androidx.navigation.NavDestination
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavGraph.Companion.findStartDestination
 import androidx.navigation.compose.currentBackStackEntryAsState
@@ -42,7 +43,7 @@ fun BottomNavigationBar(
         val currentDestination = navBackStackEntry?.destination
 
         items.forEach { screen ->
-            val selected = currentDestination?.hierarchy?.any { it.route == screen.route } == true
+            val selected = currentDestination?.hierarchy?.any { it.route == "${screen.route}/start" || it.route?.startsWith(screen.route) == true } == true
             NavigationBarItem(
                 icon = {
                        if (selected) {
@@ -60,7 +61,7 @@ fun BottomNavigationBar(
                     indicatorColor = Color.Transparent
                 ),
                 onClick = {
-                    navController.navigate(screen.route) {
+                    navController.navigate("${screen.route}/start") {
                         popUpTo(navController.graph.findStartDestination().id) {
                             saveState = true
                         }
