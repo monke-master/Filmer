@@ -17,7 +17,7 @@ class ShowsListViewModel(
     private val paginationLoader: PaginationLoader
 ): ViewModel(), ContainerHost<ShowsListState, ShowListSideEffect> {
 
-    override val container = container<ShowsListState, ShowListSideEffect>(ShowsListState())
+    override val container = container<ShowsListState, ShowListSideEffect>(ShowsListState.Idle)
 
     init {
         fetchData()
@@ -26,11 +26,11 @@ class ShowsListViewModel(
     private val paginator: Paginator<Show> = DefaultPaginator(
         onLoadItems = this::loadNextInternal,
         onError = {
-            intent { reduce { state.copy(error = it, isLoading = false) } }
+            intent { reduce { ShowsListState.Error(it) } }
         },
         onSuccess = { items ->
             intent {
-                reduce { state.copy(isLoadingNext = false, items = state.items + items) }
+                reduce { ShowsListState.Success(items, false) }
             }
         }
     )
@@ -38,17 +38,17 @@ class ShowsListViewModel(
     fun fetchData() {
         viewModelScope.launch {
             intent {
-                reduce { state.copy(isLoading = true) }
+                reduce { ShowsListState.Loading }
                 val result = paginationLoader.loadNext(null)
 
                 val items = result.getOrElse {
-                    reduce { state.copy(error = it) }
+                    reduce { ShowsListState.Error(it) }
                     return@intent
                 }
                 paginator.setKey(items.nextKey)
 
                 reduce {
-                    state.copy(isLoading = false, items = items.items)
+                    ShowsListState.Success(items.items, false)
                 }
             }
         }
@@ -62,7 +62,7 @@ class ShowsListViewModel(
 
     private suspend fun loadNextInternal(cursor: String?): Result<PaginationResult<Show>> {
         intent {
-            reduce { state.copy(isLoadingNext = true) }
+            reduce { ShowsListState.Success(state.itemsOrThrow(), true) }
         }
         return paginationLoader.loadNext(cursor)
     }

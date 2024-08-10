@@ -50,9 +50,11 @@ private fun LoadingIndicatorPreview() {
 
 @Composable
 fun LoadingPlaceholder(
+    modifier: Modifier = Modifier,
     text: String? = null
 ) {
     Column(
+        modifier = modifier,
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center
     ) {
