@@ -131,12 +131,14 @@ private fun ShowScreenContent(
                 RatingBadge(
                     rating = show.rating.getRating(),
                     modifier = Modifier.padding(top = 16.dp))
-                PlayButton(
-                    modifier = Modifier.padding(top = 24.dp),
-                    onBtnClicked = {
-                        showDialog = true
-                    }
-                )
+                if (show.services.isNotEmpty()) {
+                    PlayButton(
+                        modifier = Modifier.padding(top = 24.dp),
+                        onBtnClicked = {
+                            showDialog = true
+                        }
+                    )
+                }
             }
         }
         ShowOverview(
