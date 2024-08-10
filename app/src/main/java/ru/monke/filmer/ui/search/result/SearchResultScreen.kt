@@ -37,6 +37,8 @@ import ru.monke.filmer.ui.common.LoadingPlaceholder
 import ru.monke.filmer.ui.common.SearchField
 import ru.monke.filmer.ui.common.ShowItem
 import ru.monke.filmer.ui.common.VerticalShowsList
+import ru.monke.filmer.ui.common.repeat
+import ru.monke.filmer.ui.mockedShow
 import ru.monke.filmer.ui.theme.FilmerTheme
 import ru.monke.filmer.ui.theme.Grey
 import ru.monke.filmer.ui.theme.White
@@ -50,14 +52,29 @@ fun SearchResultScreen(
 
     val state by viewModel.collectAsState()
 
+    SearchResultScreenContent(
+        state = state,
+        searchRequest = viewModel::search,
+        onCancelBtnClicked = onCancelBtnClicked,
+        onShowClicked = onShowClicked
+    )
+
+}
+@Composable
+private fun SearchResultScreenContent(
+    state: SearchResultState,
+    searchRequest: (String) -> Unit,
+    onCancelBtnClicked: () -> Unit,
+    onShowClicked: (Show) -> Unit
+) {
     val focusRequester = remember { FocusRequester() }
 
     LaunchedEffect(key1 = focusRequester) {
         focusRequester.requestFocus()
     }
-
     Surface(
-        color = MaterialTheme.colorScheme.background
+        color = MaterialTheme.colorScheme.background,
+        modifier = Modifier.fillMaxSize()
     ) {
         Column(
             modifier = Modifier.padding(horizontal = 16.dp)
@@ -66,30 +83,34 @@ fun SearchResultScreen(
                 modifier = Modifier
                     .padding(horizontal = 16.dp, vertical = 16.dp)
                     .focusRequester(focusRequester),
-                onTextChanged = viewModel::search
+                onTextChanged = searchRequest
             )
-            if (state.isLoading) {
-                LoadingPlaceholder()
-            } else if (state.isSuccessful) {
-                if (state.result.isEmpty()) {
-                    NotFoundPlaceholder()
-                } else {
-                    VerticalShowsList(
-                        shows = state.result,
-                        onLoadShow = {  },
-                        onShowClicked = onShowClicked,
-                        isLoading = state.isLoadingNext
-                    )
-                }
-            } else if (state.error != null) {
-                Text(text = "Чушь ебаная: " + state.error?.localizedMessage)
+            when (state) {
+                is SearchResultState.Error -> Text(text = "Чушь ебаная: " + state.error.message)
+                SearchResultState.Idle -> {}
+                SearchResultState.Loading ->  LoadingPlaceholder(modifier = Modifier.fillMaxSize())
+                is SearchResultState.Success -> SuccessState(state = state, onShowClicked)
             }
-
         }
     }
 }
 
-
+@Composable
+private fun SuccessState(
+    state: SearchResultState.Success,
+    onShowClicked: (Show) -> Unit
+) {
+    if (state.result.isNotEmpty()) {
+        VerticalShowsList(
+            shows = state.result,
+            onLoadShow = { },
+            onShowClicked = onShowClicked,
+            isLoading = state.isLoadingNext
+        )
+    } else {
+        NotFoundPlaceholder(modifier = Modifier.fillMaxSize())
+    }
+}
 
 @Composable
 fun SearchTextField(
@@ -159,21 +180,50 @@ fun NotFoundPlaceholder(
 
 @Composable()
 @Preview(showBackground = true)
-fun SearchResultPreview() {
+fun SuccessPreview() {
     FilmerTheme {
-        Surface(modifier = Modifier.fillMaxSize()) {
-            // SearchResultScreen()
+        SearchResultScreenContent(
+            state = SearchResultState.Success(listOf(mockedShow).repeat(2), true),
+            searchRequest = {},
+            onCancelBtnClicked = { }) {
+            
         }
     }
 }
 
-@Composable
+@Composable()
 @Preview(showBackground = true)
-fun NotFoundPlaceholderPreview() {
+fun NotFoundPreview() {
     FilmerTheme {
-        Surface {
-            NotFoundPlaceholder(modifier = Modifier.fillMaxSize())
-        }
+        SearchResultScreenContent(
+            state = SearchResultState.Success(emptyList(), false),
+            searchRequest = {},
+            onCancelBtnClicked = { }) {
 
+        }
+    }
+}
+
+@Composable()
+@Preview(showBackground = true)
+fun ErrorStatePreview() {
+    FilmerTheme {
+        SearchResultScreenContent(
+            state = SearchResultState.Error(StackOverflowError()),
+            searchRequest = {},
+            onCancelBtnClicked = { }) {
+        }
+    }
+}
+
+@Composable()
+@Preview(showBackground = true)
+fun LoadingStatePreview() {
+    FilmerTheme {
+        SearchResultScreenContent(
+            state = SearchResultState.Loading,
+            searchRequest = {},
+            onCancelBtnClicked = { }) {
+        }
     }
 }

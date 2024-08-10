@@ -17,7 +17,7 @@ class SearchResultViewModel(
     private val searchUseCase: SearchUseCase
 ): ViewModel(), ContainerHost<SearchResultState, SearchResultSideEffect> {
 
-    override val container = container<SearchResultState, SearchResultSideEffect>(SearchResultState())
+    override val container = container<SearchResultState, SearchResultSideEffect>(SearchResultState.Idle)
 
     private var searchJob: Job? = null
     private val SEARCH_DELAY = 1000L
@@ -32,19 +32,15 @@ class SearchResultViewModel(
     private suspend fun searchInternal(query: String) {
         delay(SEARCH_DELAY)
         intent {
-            reduce { state.copy(isLoading = true) }
+            reduce { SearchResultState.Loading }
 
             val result = searchUseCase.execute(query).getOrElse {
-                reduce { state.copy(error = it, isLoading = false) }
+                reduce { SearchResultState.Error(it) }
                 return@intent
             }
 
             reduce {
-                state.copy(
-                    isLoading = false,
-                    isSuccessful = true,
-                    result = result
-                )
+                SearchResultState.Success(result, false)
             }
         }
     }
