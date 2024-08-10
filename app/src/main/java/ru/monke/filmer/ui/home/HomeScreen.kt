@@ -41,6 +41,7 @@ import ru.monke.filmer.ui.common.ShimmerPoster
 import ru.monke.filmer.ui.common.ShowsList
 import ru.monke.filmer.ui.common.repeat
 import ru.monke.filmer.ui.getMocked
+import ru.monke.filmer.ui.mockedShow
 import ru.monke.filmer.ui.theme.DarkGrey
 import ru.monke.filmer.ui.theme.FilmerTheme
 import ru.monke.filmer.ui.theme.White
@@ -53,18 +54,29 @@ fun HomeScreen(
 ) {
     val state by viewModel.collectAsState()
 
+   HomeScreenContent(
+       state = state,
+       onShowItemClicked = onShowItemClicked,
+       toShowsListNav = toShowsListNav
+   )
+}
+
+@Composable
+private fun HomeScreenContent(
+    state: HomeState,
+    onShowItemClicked: (Show) -> Unit,
+    toShowsListNav: () -> Unit
+) {
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background,
     ) {
-        if (state.isLoading) {
-            LoadingPlaceholder(text = stringResource(id = R.string.loading_shows))
-        } else if (state.exception != null) {
-            Text(text = "Ты обосрался")
-        } else {
-            HomeScreenContent(
-                freshShows = state.freshShows,
-                topShows = state.topShows,
+        when(state) {
+            is HomeState.Error -> Text(text = "Ты обосрался")
+            HomeState.Idle -> {}
+            HomeState.Loading -> LoadingPlaceholder(text = stringResource(id = R.string.loading_shows))
+            is HomeState.Success -> SuccessState(
+                state = state,
                 onShowItemClicked = onShowItemClicked,
                 toShowsListNav = toShowsListNav
             )
@@ -73,9 +85,8 @@ fun HomeScreen(
 }
 
 @Composable
-private fun HomeScreenContent(
-    topShows: List<Show>,
-    freshShows: List<Show>,
+private fun SuccessState(
+    state: HomeState.Success,
     onShowItemClicked: (Show) -> Unit,
     toShowsListNav: () -> Unit
 ) {
@@ -91,10 +102,10 @@ private fun HomeScreenContent(
         )
         FreshShowsCarousel(
             modifier = Modifier.padding(top = 24.dp),
-            showsList = freshShows,
+            showsList = state.freshShows,
             onShowItemClicked = onShowItemClicked)
         ShowsList(
-            shows = topShows,
+            shows = state.topShows,
             title = stringResource(id = R.string.most_popular),
             onItemClicked = onShowItemClicked,
             onAllShowsClicked = toShowsListNav
@@ -183,19 +194,37 @@ fun CarouselItem(
 
 @Composable
 @Preview(showBackground = true)
-private fun HomePreview() {
+private fun SuccessStatePreview() {
     FilmerTheme() {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background,
-        ) {
-            HomeScreenContent(
-                topShows = listOf(getMocked(LocalContext.current.resources)).repeat(10),
-                freshShows = listOf(getMocked(LocalContext.current.resources)).repeat(10),
-                onShowItemClicked = {},
-                toShowsListNav = {}
-            )
-        }
+        HomeScreenContent(
+            state = HomeState.Success(
+                freshShows = listOf(mockedShow).repeat(4),
+                topShows = listOf(mockedShow).repeat(4),
+            ),
+            onShowItemClicked = {},
+            toShowsListNav = {})
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+private fun ErrorStatePreview() {
+    FilmerTheme() {
+        HomeScreenContent(
+            state = HomeState.Error(StackOverflowError()),
+            onShowItemClicked = {},
+            toShowsListNav = {})
+    }
+}
+
+@Composable
+@Preview(showBackground = true)
+private fun LoadingStatePreview() {
+    FilmerTheme() {
+        HomeScreenContent(
+            state = HomeState.Loading,
+            onShowItemClicked = {},
+            toShowsListNav = {})
     }
 }
 

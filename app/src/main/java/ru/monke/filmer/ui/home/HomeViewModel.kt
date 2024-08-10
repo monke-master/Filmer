@@ -10,6 +10,7 @@ import org.orbitmvi.orbit.syntax.simple.reduce
 import org.orbitmvi.orbit.viewmodel.container
 import ru.monke.filmer.domain.GetFreshShowsUseCase
 import ru.monke.filmer.domain.GetTopShowsUseCase
+import ru.monke.filmer.ui.showlist.ShowsListState
 import java.util.Calendar
 import javax.inject.Inject
 
@@ -18,15 +19,15 @@ class HomeViewModel(
     private val getTopShowsUseCase: GetTopShowsUseCase,
 ): ViewModel(), ContainerHost<HomeState, HomeSideEffect> {
 
-    override val container = container<HomeState, HomeSideEffect>(HomeState())
+    override val container = container<HomeState, HomeSideEffect>(HomeState.Idle)
 
     init {
         fetchData()
     }
 
-    fun fetchData() {
+    private fun fetchData() {
         intent {
-            reduce { state.copy(isLoading = true) }
+            reduce { HomeState.Loading }
 
             val topShowsDef = viewModelScope.async { getTopShowsUseCase.execute() }
             val freshShowsDef = viewModelScope.async {
@@ -36,19 +37,18 @@ class HomeViewModel(
             val topShowsResult = topShowsDef
                 .await()
                 .onFailure {
-                    reduce { state.copy(exception = it, isLoading = false) }
+                    reduce { HomeState.Error(it) }
                     return@intent
                 }
             val freshShowsResult = freshShowsDef
                 .await()
                 .onFailure {
-                    reduce { state.copy(exception = it, isLoading = false) }
+                    reduce { HomeState.Error(it) }
                     return@intent
                 }
 
             reduce {
-                state.copy(
-                    isLoading = false,
+                HomeState.Success(
                     topShows = topShowsResult.getOrNull() ?: emptyList(),
                     freshShows = freshShowsResult.getOrNull() ?: emptyList(),
                 )
