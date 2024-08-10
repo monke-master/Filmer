@@ -2,8 +2,17 @@ package ru.monke.filmer.ui.show
 
 import ru.monke.filmer.domain.Show
 
-data class ShowState(
-    val show: Show? = null,
-    val error: Throwable? = null,
-    val isLoading: Boolean = false
-)
+sealed class ShowState {
+
+    data object Idle: ShowState()
+
+    data object Loading: ShowState()
+
+    data class Error(
+        val error: Throwable
+    ): ShowState()
+
+    data class Success(
+        val show: Show
+    ): ShowState()
+}

@@ -23,11 +23,9 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.VerticalDivider
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -37,13 +35,11 @@ import androidx.compose.ui.draw.drawWithCache
 import androidx.compose.ui.graphics.BlendMode
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.findViewTreeLifecycleOwner
 import org.orbitmvi.orbit.compose.collectAsState
 import ru.monke.filmer.R
 import ru.monke.filmer.domain.Show
@@ -54,7 +50,7 @@ import ru.monke.filmer.ui.common.ShimmerPoster
 import ru.monke.filmer.ui.common.getGenre
 import ru.monke.filmer.ui.common.getRating
 import ru.monke.filmer.ui.common.quantityStringResource
-import ru.monke.filmer.ui.getMocked
+import ru.monke.filmer.ui.mockedShow
 import ru.monke.filmer.ui.theme.FilmerTheme
 import ru.monke.filmer.ui.theme.SoftBlue
 
@@ -65,28 +61,35 @@ fun ShowScreen(
 ) {
     val state by viewModel.collectAsState()
 
-    Surface(
-        modifier = Modifier.fillMaxSize(),
-        color = MaterialTheme.colorScheme.background,
-    ) {
-        if (state.isLoading) {
-            LoadingPlaceholder(text = stringResource(id = R.string.loading_shows))
-        } else if (state.error != null) {
-            Text(text = state.error?.localizedMessage ?: " ")
-        } else {
-            state.show?.let { show ->
-                ShowScreenContent(
-                    show = show,
-                    onBackButtonClicked = onBackButtonClicked
-                )
-            }
-        }
-    }
-
+    ShowScreenContent(
+        state = state,
+        onBackButtonClicked = onBackButtonClicked
+    )
 }
 
 @Composable
 private fun ShowScreenContent(
+    state: ShowState,
+    onBackButtonClicked: () -> Unit
+) {
+    Surface(
+        modifier = Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background,
+    ) {
+        when(state) {
+            is ShowState.Error -> Text(text = state.error.message ?: "Ошибочка вышла")
+            ShowState.Idle -> {}
+            ShowState.Loading -> LoadingPlaceholder(text = stringResource(id = R.string.loading_shows))
+            is ShowState.Success -> SuccessState(
+                show = state.show,
+                onBackButtonClicked = onBackButtonClicked
+            )
+        }
+    }
+}
+
+@Composable
+private fun SuccessState(
     show: Show,
     onBackButtonClicked: () -> Unit,
 ) {
@@ -287,16 +290,33 @@ private fun ShowOverview(
 
 @Preview
 @Composable
-fun ShowScreenPreview() {
+fun SuccessStatePreview() {
     FilmerTheme {
-        Surface(
-            modifier = Modifier.fillMaxSize(),
-            color = MaterialTheme.colorScheme.background,
-        ) {
-            ShowScreenContent(
-                show = getMocked(LocalContext.current.resources),
-                onBackButtonClicked = {},
-            )
-        }
+        ShowScreenContent(
+            state = ShowState.Success(mockedShow),
+            onBackButtonClicked = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+fun ErrorStatePreview() {
+    FilmerTheme {
+        ShowScreenContent(
+            state = ShowState.Error(StackOverflowError()),
+            onBackButtonClicked = {},
+        )
+    }
+}
+
+@Preview
+@Composable
+fun LoadingStatePreview() {
+    FilmerTheme {
+        ShowScreenContent(
+            state = ShowState.Loading,
+            onBackButtonClicked = {},
+        )
     }
 }

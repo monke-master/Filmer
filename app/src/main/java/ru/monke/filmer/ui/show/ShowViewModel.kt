@@ -16,20 +16,20 @@ class ShowViewModel(
     private val showId: String
 ): ViewModel(), ContainerHost<ShowState, ShowSideEffect> {
 
-    override val container = container<ShowState, ShowSideEffect>(ShowState())
+    override val container = container<ShowState, ShowSideEffect>(ShowState.Idle)
 
     init {
         getShow()
     }
 
-    fun getShow() = intent {
+    private fun getShow() = intent {
         viewModelScope.launch {
-            reduce { state.copy(isLoading = true) }
+            reduce { ShowState.Loading }
             val result = getShowByIdUseCase.execute(showId)
 
             result
-                .onFailure { reduce { state.copy(isLoading = false, error = it) } }
-                .onSuccess { reduce { state.copy(isLoading = false, show = it) } }
+                .onFailure { reduce { ShowState.Error(it) } }
+                .onSuccess { reduce { ShowState.Success(it) } }
         }
     }
 
