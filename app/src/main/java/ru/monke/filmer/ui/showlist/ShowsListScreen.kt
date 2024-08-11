@@ -20,6 +20,7 @@ import androidx.compose.ui.unit.dp
 import org.orbitmvi.orbit.compose.collectAsState
 import ru.monke.filmer.R
 import ru.monke.filmer.domain.Show
+import ru.monke.filmer.ui.common.ErrorPlaceholder
 import ru.monke.filmer.ui.common.IconButton
 import ru.monke.filmer.ui.common.LoadingPlaceholder
 import ru.monke.filmer.ui.common.VerticalShowsList
@@ -39,7 +40,8 @@ fun ShowsListScreen(
         state = state,
         title = title,
         onShowItemClicked = onShowItemClicked ,
-        onLoadNext = showsListViewModel::loadNext
+        onLoadNext = showsListViewModel::loadNext,
+        onFetchData = showsListViewModel::fetchData
     )
 }
 
@@ -48,7 +50,8 @@ private fun ShowsListScreenContent(
     state: ShowsListState,
     title: String,
     onShowItemClicked: (Show) -> Unit,
-    onLoadNext: () -> Unit
+    onLoadNext: () -> Unit,
+    onFetchData: () -> Unit
 ) {
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -64,7 +67,8 @@ private fun ShowsListScreenContent(
                 title = title
             )
             when (state) {
-                is ShowsListState.Error -> Text(text = "Ну ты пиздец${state.error}")
+                is ShowsListState.Error ->
+                    ErrorPlaceholder(errorMessage = state.error.message, onRetry = onFetchData)
                 ShowsListState.Idle -> {}
                 ShowsListState.Loading -> LoadingPlaceholder(modifier = Modifier.fillMaxSize())
                 is ShowsListState.Success -> SuccessState(
@@ -130,7 +134,7 @@ private fun SuccessStatePreview() {
             ShowsListScreenContent(
                 title = "Летим в Хмеймим",
                 state = ShowsListState.Success(items = listOf(getMocked(LocalContext.current.resources)).repeat(2), isLoadingNext = true),
-                onLoadNext = {}, onShowItemClicked = {}
+                onLoadNext = {}, onShowItemClicked = {}, onFetchData = {}
             )
         }
     }
@@ -147,7 +151,7 @@ private fun LoadingStatePreview() {
             ShowsListScreenContent(
                 title = "Летим в Хмеймим",
                 state = ShowsListState.Loading,
-                onLoadNext = {}, onShowItemClicked = {}
+                onLoadNext = {}, onShowItemClicked = {}, onFetchData = {}
             )
         }
     }
@@ -164,7 +168,7 @@ private fun ErrorStatePreview() {
             ShowsListScreenContent(
                 title = "Летим в Хмеймим",
                 state = ShowsListState.Error(StackOverflowError()),
-                onLoadNext = {}, onShowItemClicked = {}
+                onLoadNext = {}, onShowItemClicked = {}, onFetchData = {}
             )
         }
     }

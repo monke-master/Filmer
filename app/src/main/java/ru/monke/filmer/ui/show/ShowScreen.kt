@@ -44,6 +44,7 @@ import org.orbitmvi.orbit.compose.collectAsState
 import ru.monke.filmer.R
 import ru.monke.filmer.domain.Show
 import ru.monke.filmer.ui.common.DescriptionItem
+import ru.monke.filmer.ui.common.ErrorPlaceholder
 import ru.monke.filmer.ui.common.LoadingPlaceholder
 import ru.monke.filmer.ui.common.RatingBadge
 import ru.monke.filmer.ui.common.ShimmerPoster
@@ -63,21 +64,23 @@ fun ShowScreen(
 
     ShowScreenContent(
         state = state,
-        onBackButtonClicked = onBackButtonClicked
+        onBackButtonClicked = onBackButtonClicked,
+        onFetchData = viewModel::getShow
     )
 }
 
 @Composable
 private fun ShowScreenContent(
     state: ShowState,
-    onBackButtonClicked: () -> Unit
+    onBackButtonClicked: () -> Unit,
+    onFetchData: () -> Unit
 ) {
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background,
     ) {
         when(state) {
-            is ShowState.Error -> Text(text = state.error.message ?: "Ошибочка вышла")
+            is ShowState.Error -> ErrorPlaceholder(errorMessage = state.error.message, onRetry = onFetchData)
             ShowState.Idle -> {}
             ShowState.Loading -> LoadingPlaceholder(text = stringResource(id = R.string.loading_shows))
             is ShowState.Success -> SuccessState(
@@ -295,6 +298,7 @@ fun SuccessStatePreview() {
         ShowScreenContent(
             state = ShowState.Success(mockedShow),
             onBackButtonClicked = {},
+            onFetchData = {}
         )
     }
 }
@@ -306,6 +310,7 @@ fun ErrorStatePreview() {
         ShowScreenContent(
             state = ShowState.Error(StackOverflowError()),
             onBackButtonClicked = {},
+            onFetchData = {}
         )
     }
 }
@@ -317,6 +322,7 @@ fun LoadingStatePreview() {
         ShowScreenContent(
             state = ShowState.Loading,
             onBackButtonClicked = {},
+            onFetchData = {}
         )
     }
 }

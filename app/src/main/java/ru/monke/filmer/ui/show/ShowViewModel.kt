@@ -22,7 +22,7 @@ class ShowViewModel(
         getShow()
     }
 
-    private fun getShow() = intent {
+    fun getShow() = intent {
         viewModelScope.launch {
             reduce { ShowState.Loading }
             val result = getShowByIdUseCase.execute(showId)

@@ -33,6 +33,7 @@ import androidx.compose.ui.unit.dp
 import org.orbitmvi.orbit.compose.collectAsState
 import ru.monke.filmer.R
 import ru.monke.filmer.domain.Show
+import ru.monke.filmer.ui.common.ErrorPlaceholder
 import ru.monke.filmer.ui.common.LoadingPlaceholder
 import ru.monke.filmer.ui.common.SearchField
 import ru.monke.filmer.ui.common.ShowItem
@@ -56,7 +57,8 @@ fun SearchResultScreen(
         state = state,
         searchRequest = viewModel::search,
         onCancelBtnClicked = onCancelBtnClicked,
-        onShowClicked = onShowClicked
+        onShowClicked = onShowClicked,
+        onFetchData = viewModel::retry
     )
 
 }
@@ -65,7 +67,8 @@ private fun SearchResultScreenContent(
     state: SearchResultState,
     searchRequest: (String) -> Unit,
     onCancelBtnClicked: () -> Unit,
-    onShowClicked: (Show) -> Unit
+    onShowClicked: (Show) -> Unit,
+    onFetchData: () -> Unit
 ) {
     val focusRequester = remember { FocusRequester() }
 
@@ -86,7 +89,7 @@ private fun SearchResultScreenContent(
                 onTextChanged = searchRequest
             )
             when (state) {
-                is SearchResultState.Error -> Text(text = "Чушь ебаная: " + state.error.message)
+                is SearchResultState.Error -> ErrorPlaceholder(state.error.message, onFetchData)
                 SearchResultState.Idle -> {}
                 SearchResultState.Loading ->  LoadingPlaceholder(modifier = Modifier.fillMaxSize())
                 is SearchResultState.Success -> SuccessState(state = state, onShowClicked)
@@ -185,9 +188,9 @@ fun SuccessPreview() {
         SearchResultScreenContent(
             state = SearchResultState.Success(listOf(mockedShow).repeat(2), true),
             searchRequest = {},
-            onCancelBtnClicked = { }) {
-            
-        }
+            onCancelBtnClicked = { },
+            onFetchData = {},
+            onShowClicked = {})
     }
 }
 
@@ -198,9 +201,9 @@ fun NotFoundPreview() {
         SearchResultScreenContent(
             state = SearchResultState.Success(emptyList(), false),
             searchRequest = {},
-            onCancelBtnClicked = { }) {
-
-        }
+            onCancelBtnClicked = { },
+            onFetchData = {},
+            onShowClicked = {})
     }
 }
 
@@ -211,8 +214,9 @@ fun ErrorStatePreview() {
         SearchResultScreenContent(
             state = SearchResultState.Error(StackOverflowError()),
             searchRequest = {},
-            onCancelBtnClicked = { }) {
-        }
+            onCancelBtnClicked = { },
+            onFetchData = {},
+            onShowClicked = {})
     }
 }
 
@@ -223,7 +227,8 @@ fun LoadingStatePreview() {
         SearchResultScreenContent(
             state = SearchResultState.Loading,
             searchRequest = {},
-            onCancelBtnClicked = { }) {
-        }
+            onCancelBtnClicked = { },
+            onFetchData = {},
+            onShowClicked = {})
     }
 }

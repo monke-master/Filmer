@@ -21,10 +21,16 @@ class SearchResultViewModel(
 
     private var searchJob: Job? = null
     private val SEARCH_DELAY = 1000L
+    private lateinit var query: String
+
+    fun retry() {
+        search(query)
+    }
 
 
     fun search(query: String) {
         if (query.isEmpty()) return
+        this.query = query
         searchJob?.cancel()
         searchJob = viewModelScope.launch {searchInternal(query) }
     }

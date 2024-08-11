@@ -82,7 +82,8 @@ class SearchViewModel(
                     recommendedShowsState = RecommendedShowsState(recommendedShows.items),
                     genres = listOf(ALL_GENRE) + genres,
                     isLoading = false,
-                    isSuccess = true
+                    isSuccess = true,
+                    error = null
                 )
             }
         }

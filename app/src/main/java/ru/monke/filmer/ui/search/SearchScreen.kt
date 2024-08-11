@@ -32,6 +32,7 @@ import ru.monke.filmer.domain.Genre
 import ru.monke.filmer.domain.Show
 import ru.monke.filmer.ui.action
 import ru.monke.filmer.ui.comedy
+import ru.monke.filmer.ui.common.ErrorPlaceholder
 import ru.monke.filmer.ui.common.LoadingPlaceholder
 import ru.monke.filmer.ui.common.SearchField
 import ru.monke.filmer.ui.common.UpdatableShowItem
@@ -56,7 +57,10 @@ fun SearchScreen(
         if (state.isLoading) {
             LoadingPlaceholder(text = stringResource(id = R.string.loading_shows))
         } else if (state.error != null) {
-            Text(text = "Лошара")
+            ErrorPlaceholder(
+                errorMessage = state.error?.message,
+                onRetry = searchViewModel::fetchData
+            )
         } else if (state.isSuccess){
             SearchScreenContent(
                 genres = state.genres,
