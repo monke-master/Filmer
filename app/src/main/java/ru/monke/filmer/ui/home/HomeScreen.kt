@@ -35,6 +35,7 @@ import androidx.compose.ui.unit.dp
 import org.orbitmvi.orbit.compose.collectAsState
 import ru.monke.filmer.R
 import ru.monke.filmer.domain.Show
+import ru.monke.filmer.ui.common.ErrorPlaceholder
 import ru.monke.filmer.ui.common.LoadingPlaceholder
 import ru.monke.filmer.ui.common.SearchField
 import ru.monke.filmer.ui.common.ShimmerPoster
@@ -57,7 +58,8 @@ fun HomeScreen(
    HomeScreenContent(
        state = state,
        onShowItemClicked = onShowItemClicked,
-       toShowsListNav = toShowsListNav
+       toShowsListNav = toShowsListNav,
+       onFetchData = viewModel::fetchData
    )
 }
 
@@ -65,14 +67,15 @@ fun HomeScreen(
 private fun HomeScreenContent(
     state: HomeState,
     onShowItemClicked: (Show) -> Unit,
-    toShowsListNav: () -> Unit
+    toShowsListNav: () -> Unit,
+    onFetchData: () -> Unit
 ) {
     Surface(
         modifier = Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background,
     ) {
         when(state) {
-            is HomeState.Error -> Text(text = "Ты обосрался")
+            is HomeState.Error -> ErrorPlaceholder(state.error.message, onFetchData)
             HomeState.Idle -> {}
             HomeState.Loading -> LoadingPlaceholder(text = stringResource(id = R.string.loading_shows))
             is HomeState.Success -> SuccessState(
@@ -202,7 +205,7 @@ private fun SuccessStatePreview() {
                 topShows = listOf(mockedShow).repeat(4),
             ),
             onShowItemClicked = {},
-            toShowsListNav = {})
+            toShowsListNav = {}, {})
     }
 }
 
@@ -213,7 +216,8 @@ private fun ErrorStatePreview() {
         HomeScreenContent(
             state = HomeState.Error(StackOverflowError()),
             onShowItemClicked = {},
-            toShowsListNav = {})
+            toShowsListNav = {},
+            {})
     }
 }
 
@@ -224,7 +228,8 @@ private fun LoadingStatePreview() {
         HomeScreenContent(
             state = HomeState.Loading,
             onShowItemClicked = {},
-            toShowsListNav = {})
+            toShowsListNav = {},
+            {})
     }
 }
 

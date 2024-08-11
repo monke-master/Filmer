@@ -25,7 +25,7 @@ class HomeViewModel(
         fetchData()
     }
 
-    private fun fetchData() {
+    fun fetchData() {
         intent {
             reduce { HomeState.Loading }
 

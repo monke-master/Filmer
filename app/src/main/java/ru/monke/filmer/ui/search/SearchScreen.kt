@@ -1,9 +1,7 @@
 package ru.monke.filmer.ui.search
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -17,7 +15,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -37,13 +34,11 @@ import ru.monke.filmer.ui.action
 import ru.monke.filmer.ui.comedy
 import ru.monke.filmer.ui.common.LoadingPlaceholder
 import ru.monke.filmer.ui.common.SearchField
-import ru.monke.filmer.ui.common.ShowsList
 import ru.monke.filmer.ui.common.UpdatableShowItem
 import ru.monke.filmer.ui.common.UpdatableShowsList
 import ru.monke.filmer.ui.common.repeat
 import ru.monke.filmer.ui.getMocked
 import ru.monke.filmer.ui.theme.FilmerTheme
-import kotlin.math.log
 
 @Composable
 fun SearchScreen(
@@ -103,7 +98,6 @@ private fun SearchScreenContent(
                 .fillMaxWidth()
                 .padding(top = 16.dp)
                 .clickable {
-                    Log.d("ALAKKA", "SearchScreenContent: ")
                     onSearchFieldClicked()
                 },
         )
