@@ -48,13 +48,14 @@ fun ServicesDialog(
     onDismiss: () -> Unit
 ) {
     Dialog(onDismissRequest = onDismiss) {
-        ServicesDialogContent(services = services)
+        ServicesDialogContent(services = services, onDismiss)
     }
 }
 
 @Composable
 fun ServicesDialogContent(
-    services: List<Service>
+    services: List<Service>,
+    onDismiss: () -> Unit
 ) {
     Surface(
         shape = RoundedCornerShape(16.dp),
@@ -67,7 +68,7 @@ fun ServicesDialogContent(
                 modifier = Modifier
                     .align(Alignment.End)
                     .padding(16.dp),
-                onClicked = { /*TODO*/ },
+                onClicked = onDismiss,
                 painter = painterResource(id = R.drawable.ic_close),
                 tint = Color.Unspecified,
                 backgroundColor = DarkBlue,
@@ -144,6 +145,6 @@ fun ServicesDialogPreview() {
     FilmerTheme {
         ServicesDialogContent(listOf(
             service
-        ).repeat(3))
+        ).repeat(3)) {}
     }
 }

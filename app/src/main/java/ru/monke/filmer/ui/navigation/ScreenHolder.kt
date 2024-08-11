@@ -82,6 +82,7 @@ fun ScreenHolder(
                         showsListViewModel = viewModel,
                         title = stringResource(id = R.string.most_popular),
                         onShowItemClicked = { navController.navigate("${NavigationItem.Home.route}/show/${it.id}") },
+                        onBackBtnClicked = { navController.popBackStack() }
                     )
                 }
             }
@@ -162,7 +163,8 @@ private fun NavGraphBuilder.showsListScreen(
         ShowsListScreen(
             showsListViewModel = viewModel,
             title = stringResource(id = R.string.recommended_for_you),
-            onShowItemClicked = { navController.navigate("show/${it.id}") }
+            onShowItemClicked = { navController.navigate("show/${it.id}") },
+            onBackBtnClicked = { navController.popBackStack() }
         )
     }
 }

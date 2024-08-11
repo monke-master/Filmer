@@ -1,5 +1,6 @@
 package ru.monke.filmer.ui.search.result
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -50,7 +51,6 @@ fun SearchResultScreen(
     onCancelBtnClicked: () -> Unit,
     onShowClicked: (Show) -> Unit
 ) {
-
     val state by viewModel.collectAsState()
 
     SearchResultScreenContent(
@@ -86,7 +86,8 @@ private fun SearchResultScreenContent(
                 modifier = Modifier
                     .padding(horizontal = 16.dp, vertical = 16.dp)
                     .focusRequester(focusRequester),
-                onTextChanged = searchRequest
+                onTextChanged = searchRequest,
+                onCancelBtnClicked = onCancelBtnClicked
             )
             when (state) {
                 is SearchResultState.Error -> ErrorPlaceholder(state.error.message, onFetchData)
@@ -101,7 +102,7 @@ private fun SearchResultScreenContent(
 @Composable
 private fun SuccessState(
     state: SearchResultState.Success,
-    onShowClicked: (Show) -> Unit
+    onShowClicked: (Show) -> Unit,
 ) {
     if (state.result.isNotEmpty()) {
         VerticalShowsList(
@@ -118,7 +119,8 @@ private fun SuccessState(
 @Composable
 fun SearchTextField(
     modifier: Modifier = Modifier,
-    onTextChanged: (String) -> Unit
+    onTextChanged: (String) -> Unit,
+    onCancelBtnClicked: () -> Unit,
 ) {
     var text by remember { mutableStateOf("") }
     Row(
@@ -143,7 +145,8 @@ fun SearchTextField(
         Text(
             modifier = Modifier
                 .padding(start = 8.dp, end = 8.dp)
-                .wrapContentWidth(),
+                .wrapContentWidth()
+                .clickable { onCancelBtnClicked() },
             text = stringResource(id = R.string.cancel),
             maxLines = 1
         )

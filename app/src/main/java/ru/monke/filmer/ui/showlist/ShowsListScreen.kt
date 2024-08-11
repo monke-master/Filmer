@@ -1,5 +1,6 @@
 package ru.monke.filmer.ui.showlist
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -32,16 +33,18 @@ import ru.monke.filmer.ui.theme.FilmerTheme
 fun ShowsListScreen(
     showsListViewModel: ShowsListViewModel,
     title: String,
-    onShowItemClicked: (Show) -> Unit
+    onShowItemClicked: (Show) -> Unit,
+    onBackBtnClicked: () -> Unit
 ) {
     val state by showsListViewModel.collectAsState()
 
     ShowsListScreenContent(
         state = state,
         title = title,
-        onShowItemClicked = onShowItemClicked ,
+        onShowItemClicked = onShowItemClicked,
         onLoadNext = showsListViewModel::loadNext,
-        onFetchData = showsListViewModel::fetchData
+        onFetchData = showsListViewModel::fetchData,
+        onBackBtnClicked = onBackBtnClicked
     )
 }
 
@@ -51,7 +54,8 @@ private fun ShowsListScreenContent(
     title: String,
     onShowItemClicked: (Show) -> Unit,
     onLoadNext: () -> Unit,
-    onFetchData: () -> Unit
+    onFetchData: () -> Unit,
+    onBackBtnClicked: () -> Unit
 ) {
     Surface(
         modifier = Modifier.fillMaxSize(),
@@ -64,7 +68,8 @@ private fun ShowsListScreenContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(16.dp),
-                title = title
+                title = title,
+                onBackBtnClicked = onBackBtnClicked
             )
             when (state) {
                 is ShowsListState.Error ->
@@ -107,13 +112,14 @@ private fun SuccessState(
 @Composable
 private fun Toolbar(
     modifier: Modifier = Modifier,
-    title: String
+    title: String,
+    onBackBtnClicked: () -> Unit
 ) {
     Box(
         modifier = modifier,
     ) {
         IconButton(
-            onClicked = {},
+            onClicked = onBackBtnClicked,
             painter = painterResource(id = R.drawable.ic_back),
         )
         Text(
@@ -134,7 +140,7 @@ private fun SuccessStatePreview() {
             ShowsListScreenContent(
                 title = "Летим в Хмеймим",
                 state = ShowsListState.Success(items = listOf(getMocked(LocalContext.current.resources)).repeat(2), isLoadingNext = true),
-                onLoadNext = {}, onShowItemClicked = {}, onFetchData = {}
+                onLoadNext = {}, onShowItemClicked = {}, onFetchData = {}, onBackBtnClicked = {}
             )
         }
     }
@@ -151,7 +157,7 @@ private fun LoadingStatePreview() {
             ShowsListScreenContent(
                 title = "Летим в Хмеймим",
                 state = ShowsListState.Loading,
-                onLoadNext = {}, onShowItemClicked = {}, onFetchData = {}
+                onLoadNext = {}, onShowItemClicked = {}, onFetchData = {}, onBackBtnClicked = {}
             )
         }
     }
@@ -168,7 +174,7 @@ private fun ErrorStatePreview() {
             ShowsListScreenContent(
                 title = "Летим в Хмеймим",
                 state = ShowsListState.Error(StackOverflowError()),
-                onLoadNext = {}, onShowItemClicked = {}, onFetchData = {}
+                onLoadNext = {}, onShowItemClicked = {}, onFetchData = {}, onBackBtnClicked = {}
             )
         }
     }
