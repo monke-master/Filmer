@@ -39,6 +39,7 @@ import ru.monke.filmer.ui.common.LoadingPlaceholder
 import ru.monke.filmer.ui.common.SearchField
 import ru.monke.filmer.ui.common.VerticalShowsList
 import ru.monke.filmer.ui.common.repeat
+import ru.monke.filmer.ui.keyboard.registerKeyboardListener
 import ru.monke.filmer.ui.mockedShow
 import ru.monke.filmer.ui.theme.FilmerTheme
 import ru.monke.filmer.ui.theme.Grey
@@ -75,9 +76,18 @@ private fun SearchResultScreenContent(
 ) {
     val focusRequester = remember { FocusRequester() }
 
-    LaunchedEffect(key1 = Unit) {
-        focusRequester.requestFocus()
+    registerKeyboardListener { isOpen ->
+        onViewStateChanged(viewState.copy(showKeyboard = isOpen))
     }
+
+    LaunchedEffect(key1 = viewState) {
+        if (viewState.showKeyboard) {
+            focusRequester.requestFocus()
+        } else {
+            focusRequester.freeFocus()
+        }
+    }
+
     Surface(
         color = MaterialTheme.colorScheme.background,
         modifier = Modifier.fillMaxSize()
