@@ -63,3 +63,32 @@ fun SearchField(
         enabled = enabled
     )
 }
+
+@Composable
+fun SearchField(
+    modifier: Modifier = Modifier,
+    value: TextFieldValue,
+    placeholder: @Composable (() -> Unit)? = null,
+    trailingIcon: @Composable (() -> Unit)? = null,
+    onValueChanged: (TextFieldValue) -> Unit,
+    enabled: Boolean = true
+) {
+    TextField(
+        modifier = modifier,
+        shape = RoundedCornerShape(24.dp),
+        colors = InputFieldColors(),
+        value = value,
+        leadingIcon = {
+            Icon(
+                painter = painterResource(id = R.drawable.ic_search),
+                contentDescription = null,
+                tint = Grey
+            )
+        },
+        trailingIcon = trailingIcon,
+        maxLines = 1,
+        placeholder = placeholder,
+        onValueChange = onValueChanged,
+        enabled = enabled
+    )
+}

@@ -15,9 +15,11 @@ import javax.inject.Inject
 
 class SearchResultViewModel(
     private val searchUseCase: SearchUseCase
-): ViewModel(), ContainerHost<SearchResultState, SearchResultSideEffect> {
+): ViewModel(), ContainerHost<DataState, SearchResultSideEffect> {
 
-    override val container = container<SearchResultState, SearchResultSideEffect>(SearchResultState.Idle)
+    override val container = container<DataState, SearchResultSideEffect>(DataState.Idle)
+
+    var viewState = ViewState()
 
     private var searchJob: Job? = null
     private val SEARCH_DELAY = 1000L
@@ -38,15 +40,15 @@ class SearchResultViewModel(
     private suspend fun searchInternal(query: String) {
         delay(SEARCH_DELAY)
         intent {
-            reduce { SearchResultState.Loading }
+            reduce { DataState.Loading }
 
             val result = searchUseCase.execute(query).getOrElse {
-                reduce { SearchResultState.Error(it) }
+                reduce { DataState.Error(it) }
                 return@intent
             }
 
             reduce {
-                SearchResultState.Success(result, false)
+                DataState.Success(result, false)
             }
         }
     }

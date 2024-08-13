@@ -2,18 +2,23 @@ package ru.monke.filmer.ui.search.result
 
 import ru.monke.filmer.domain.Show
 
-sealed class SearchResultState {
+data class ViewState(
+    val fieldInput: String = "",
+    val showKeyboard: Boolean = true
+)
 
-    data object Idle: SearchResultState()
+sealed class DataState {
 
-    data object Loading: SearchResultState()
+    data object Idle: DataState()
+
+    data object Loading: DataState()
 
     data class Error(
         val error: Throwable
-    ): SearchResultState()
+    ): DataState()
 
     data class Success(
         val result: List<Show>,
         val isLoadingNext: Boolean
-    ): SearchResultState()
+    ): DataState()
 }

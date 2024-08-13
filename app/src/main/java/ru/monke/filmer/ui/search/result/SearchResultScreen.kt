@@ -7,8 +7,6 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentWidth
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -26,7 +24,9 @@ import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
@@ -37,7 +37,6 @@ import ru.monke.filmer.domain.Show
 import ru.monke.filmer.ui.common.ErrorPlaceholder
 import ru.monke.filmer.ui.common.LoadingPlaceholder
 import ru.monke.filmer.ui.common.SearchField
-import ru.monke.filmer.ui.common.ShowItem
 import ru.monke.filmer.ui.common.VerticalShowsList
 import ru.monke.filmer.ui.common.repeat
 import ru.monke.filmer.ui.mockedShow
@@ -58,21 +57,25 @@ fun SearchResultScreen(
         searchRequest = viewModel::search,
         onCancelBtnClicked = onCancelBtnClicked,
         onShowClicked = onShowClicked,
-        onFetchData = viewModel::retry
+        onFetchData = viewModel::retry,
+        onViewStateChanged = viewModel::viewState::set,
+        viewState = viewModel.viewState
     )
 
 }
 @Composable
 private fun SearchResultScreenContent(
-    state: SearchResultState,
+    viewState: ViewState,
+    state: DataState,
     searchRequest: (String) -> Unit,
     onCancelBtnClicked: () -> Unit,
     onShowClicked: (Show) -> Unit,
-    onFetchData: () -> Unit
+    onFetchData: () -> Unit,
+    onViewStateChanged: (ViewState) -> Unit
 ) {
     val focusRequester = remember { FocusRequester() }
 
-    LaunchedEffect(key1 = focusRequester) {
+    LaunchedEffect(key1 = Unit) {
         focusRequester.requestFocus()
     }
     Surface(
@@ -83,17 +86,21 @@ private fun SearchResultScreenContent(
             modifier = Modifier.padding(horizontal = 16.dp)
         ) {
             SearchTextField(
+                query = viewState.fieldInput,
                 modifier = Modifier
                     .padding(horizontal = 16.dp, vertical = 16.dp)
                     .focusRequester(focusRequester),
-                onTextChanged = searchRequest,
+                onTextChanged = { query ->
+                    searchRequest(query)
+                    onViewStateChanged(viewState.copy(fieldInput = query))
+                },
                 onCancelBtnClicked = onCancelBtnClicked
             )
             when (state) {
-                is SearchResultState.Error -> ErrorPlaceholder(state.error.message, onFetchData)
-                SearchResultState.Idle -> {}
-                SearchResultState.Loading ->  LoadingPlaceholder(modifier = Modifier.fillMaxSize())
-                is SearchResultState.Success -> SuccessState(state = state, onShowClicked)
+                is DataState.Error -> ErrorPlaceholder(state.error.message, onFetchData)
+                DataState.Idle -> {}
+                DataState.Loading ->  LoadingPlaceholder(modifier = Modifier.fillMaxSize())
+                is DataState.Success -> SuccessState(state = state, onShowClicked)
             }
         }
     }
@@ -101,7 +108,7 @@ private fun SearchResultScreenContent(
 
 @Composable
 private fun SuccessState(
-    state: SearchResultState.Success,
+    state: DataState.Success,
     onShowClicked: (Show) -> Unit,
 ) {
     if (state.result.isNotEmpty()) {
@@ -118,11 +125,12 @@ private fun SuccessState(
 
 @Composable
 fun SearchTextField(
+    query: String,
     modifier: Modifier = Modifier,
     onTextChanged: (String) -> Unit,
     onCancelBtnClicked: () -> Unit,
 ) {
-    var text by remember { mutableStateOf("") }
+    var text by remember { mutableStateOf(TextFieldValue(query, TextRange(query.length))) }
     Row(
         modifier = modifier,
         verticalAlignment = Alignment.CenterVertically
@@ -139,7 +147,7 @@ fun SearchTextField(
             },
             onValueChanged = {
                 text = it
-                onTextChanged(it)
+                onTextChanged(it.text)
             }
         )
         Text(
@@ -189,11 +197,12 @@ fun NotFoundPlaceholder(
 fun SuccessPreview() {
     FilmerTheme {
         SearchResultScreenContent(
-            state = SearchResultState.Success(listOf(mockedShow).repeat(2), true),
+            viewState = ViewState(),
+            state = DataState.Success(listOf(mockedShow).repeat(2), true),
             searchRequest = {},
             onCancelBtnClicked = { },
             onFetchData = {},
-            onShowClicked = {})
+            onShowClicked = {}) {}
     }
 }
 
@@ -202,11 +211,12 @@ fun SuccessPreview() {
 fun NotFoundPreview() {
     FilmerTheme {
         SearchResultScreenContent(
-            state = SearchResultState.Success(emptyList(), false),
+            viewState = ViewState(),
+            state = DataState.Success(emptyList(), false),
             searchRequest = {},
             onCancelBtnClicked = { },
             onFetchData = {},
-            onShowClicked = {})
+            onShowClicked = {}) {}
     }
 }
 
@@ -215,11 +225,12 @@ fun NotFoundPreview() {
 fun ErrorStatePreview() {
     FilmerTheme {
         SearchResultScreenContent(
-            state = SearchResultState.Error(StackOverflowError()),
+            viewState = ViewState(),
+            state = DataState.Error(StackOverflowError()),
             searchRequest = {},
             onCancelBtnClicked = { },
             onFetchData = {},
-            onShowClicked = {})
+            onShowClicked = {}) {}
     }
 }
 
@@ -228,10 +239,11 @@ fun ErrorStatePreview() {
 fun LoadingStatePreview() {
     FilmerTheme {
         SearchResultScreenContent(
-            state = SearchResultState.Loading,
+            viewState = ViewState(),
+            state = DataState.Loading,
             searchRequest = {},
             onCancelBtnClicked = { },
             onFetchData = {},
-            onShowClicked = {})
+            onShowClicked = {}) {}
     }
 }
